@@ -1,4 +1,4 @@
-package us.norskog.minihal;
+package us.norskog.simplehal;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;

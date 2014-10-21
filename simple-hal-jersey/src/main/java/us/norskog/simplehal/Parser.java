@@ -1,4 +1,4 @@
-package us.norskog.minihal;
+package us.norskog.simplehal;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package us.norskog.minihal;
+package us.norskog.simplehal;
 
 /**
  * Expression: evaluatable expression or simple string.

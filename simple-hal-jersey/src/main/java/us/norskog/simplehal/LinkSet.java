@@ -1,4 +1,4 @@
-package us.norskog.minihal;
+package us.norskog.simplehal;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

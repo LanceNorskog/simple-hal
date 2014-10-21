@@ -1,4 +1,4 @@
-package us.norskog.minihal;
+package us.norskog.simplehal;
 
 import static org.junit.Assert.*;
 
@@ -6,6 +6,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import org.junit.Test;
+
+import us.norskog.simplehal.ParsedLinkSet;
 
 public class ParsedLinkSetTest {
 

@@ -1,4 +1,4 @@
-package us.norskog.minihal;
+package us.norskog.simplehal;
 
 import de.odysseus.el.util.SimpleContext;
 import de.odysseus.el.util.SimpleResolver;

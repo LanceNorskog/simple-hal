@@ -1,3 +1,4 @@
+package us.norskog.simplehal;
 //package us.norskog.minihal;
 //
 //import org.junit.Test;

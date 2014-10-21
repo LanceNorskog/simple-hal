@@ -1,4 +1,9 @@
-package us.norskog.minihal;
+package us.norskog.simplehal;
+
+import us.norskog.simplehal.Embedded;
+import us.norskog.simplehal.Link;
+import us.norskog.simplehal.LinkSet;
+import us.norskog.simplehal.Links;
 
 /*
  * Endpoint test for links

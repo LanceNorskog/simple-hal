@@ -1,4 +1,4 @@
-package us.norskog.minihal;
+package us.norskog.simplehal;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;

@@ -1,4 +1,4 @@
-package us.norskog.minihal;
+package us.norskog.simplehal;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Jersey Filter/Interceptor for Minihal links unpacker
+ * Jersey Filter/Interceptor for Simple-HAL links unpacker
  * For all requests for hal+json, add hyperlinks defined
  * by @Links annotation on endpoint.
  * Hyperlinks are defined with text titles, urls etc. which
@@ -31,41 +31,49 @@ import java.util.Map;
 
 @Provider
 @Links(linkset = @LinkSet(links = { @Link(href = "", rel = "") }))
-public class MinihalInterceptor implements WriterInterceptor, ContainerRequestFilter {
+public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerRequestFilter {
 	public static final String HAL = "application/hal+json";
 
 	static ThreadLocal<URI> baseURIs = new ThreadLocal<URI>(); 
+	static ThreadLocal<Boolean> doAlls = new ThreadLocal<Boolean>(); 
 	static Mapify mapifier = new Mapify();
 	static Map<ParsedLinkSet, Evaluator> evaluators = new LinkedHashMap<ParsedLinkSet, Evaluator>();;
 
-	public MinihalInterceptor() {
-//		System.err.println("MinihalInterceptor created");
+	public SimpleHALInterceptorFilter() {
+		System.out.println("SimpleHALInterceptorFilter created");
 	}
-	
+
 	public void filter(ContainerRequestContext requestContext)
 			throws IOException {
 		URI baseUri = requestContext.getUriInfo().getBaseUri();
 		baseURIs.set(baseUri);
+		List<String> simplehal_json = requestContext.getUriInfo().getQueryParameters().get("simple-hal-json");
+		doAlls.set(simplehal_json != null && simplehal_json.size() > 0 && simplehal_json.get(0).equals("true"));
 	}
 
 	//   @Override
 	public void aroundWriteTo(WriterInterceptorContext context)
 			throws IOException, WebApplicationException {
-		Object entity = context.getEntity();
-		if (! context.getMediaType().toString().equals(HAL) || entity == null) {
-			context.proceed();
-			return;
-		}
-		ParsedLinkSet parsedLinkSet = ParsedLinkSet.getParsedLinkSet(context.getAnnotations());
-		if (parsedLinkSet == null) {
-			context.proceed();
-			return;
-		}
+		try {
+			Object entity = context.getEntity();
+			Boolean boolean1 = doAlls.get();
+			if ((!boolean1 && !context.getMediaType().toString().equals(HAL)) || entity == null) {
+				context.proceed();
+				return;
+			}
+			ParsedLinkSet parsedLinkSet = ParsedLinkSet.getParsedLinkSet(context.getAnnotations());
+			if (parsedLinkSet == null) {
+				context.proceed();
+				return;
+			}
 
-		Map<String, Object> response = mapifier.convertToMap(entity);
-		evaluate(parsedLinkSet, response);
-		context.setEntity(response);
-		context.proceed();
+			Map<String, Object> response = mapifier.convertToMap(entity);
+			evaluate(parsedLinkSet, response);
+			context.setEntity(response);
+			context.proceed();
+		} catch (RuntimeException e) {
+			throw e;
+		}
 	}
 
 	private void evaluate(ParsedLinkSet parsedLinkSet,
@@ -75,6 +83,8 @@ public class MinihalInterceptor implements WriterInterceptor, ContainerRequestFi
 		addBaseURI(expanded);
 		if (expanded != null) {
 			response.put("_links", expanded);
+		}
+		if (parsedLinkSet.getEmbeddedMap() != null) {
 			Map<String, EmbeddedStore> storeMap = parsedLinkSet.getEmbeddedMap();
 			Map<String, List<List<Map<String, String>>>> itemChunk = new LinkedHashMap<String, List<List<Map<String, String>>>>();
 			for(String name: storeMap.keySet()) {
@@ -125,20 +135,20 @@ public class MinihalInterceptor implements WriterInterceptor, ContainerRequestFi
 		String baseURI = baseURIs.get().toString();
 		if (baseURI.endsWith("/"))
 			baseURI = baseURI.substring(0, baseURI.length() - 1);
-			for(Map<String,String> link: links) {
-				String href = link.get("href");
-				if (href != null) {
-					if (href.startsWith("/"))
-						href = href.substring(1);
-					link.put("href", baseURI + "/" + href);
-				}
+		for(Map<String,String> link: links) {
+			String href = link.get("href");
+			if (href != null) {
+				if (href.startsWith("/"))
+					href = href.substring(1);
+				link.put("href", baseURI + "/" + href);
+			}
 		}
 	}
 
 	private Evaluator init(ParsedLinkSet parsedLinkSet) {
 		if (! evaluators.containsKey(parsedLinkSet)) {
 			// idempotent race condition v.s. synchronized in every call 
-			synchronized(MinihalInterceptor.class) {
+			synchronized(SimpleHALInterceptorFilter.class) {
 				Evaluator evaluator = new Evaluator(parsedLinkSet);
 				evaluators.put(parsedLinkSet, evaluator);
 			}

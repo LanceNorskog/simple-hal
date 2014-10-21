@@ -1,9 +1,11 @@
-package us.norskog.minihal;
+package us.norskog.simplehal;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import us.norskog.simplehal.Executor;
 
 import java.util.*;
 

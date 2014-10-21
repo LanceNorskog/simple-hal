@@ -29,13 +29,13 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>us.norskog.minihal</groupId>
-	<artifactId>minihal-jersey</artifactId>
+	<groupId>us.norskog.simplehal</groupId>
+	<artifactId>simple-hal-jersey</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>minihal-jersey</name>
 
-	<description>Jersey library using base minihal library.</description>
+	<description>Jersey Provider using base Simple-HAL library.</description>
 
 	<dependencies>
 		<dependency>
