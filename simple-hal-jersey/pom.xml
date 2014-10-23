@@ -139,6 +139,12 @@
 
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+
 		<plugins>
 			<!-- Run the application using "mvn jetty:run" to deploy to Jetty -->
 			<plugin>
