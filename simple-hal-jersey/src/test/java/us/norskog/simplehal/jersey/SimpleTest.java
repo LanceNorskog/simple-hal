@@ -74,7 +74,7 @@ public class SimpleTest extends JerseyTest {
 			for(List<Map<String, String>> inner: outer) {
 				for(Map<String, String> links: inner) {
 					System.out.println(links.keySet().toString());
-					if (links.containsKey("self"))
+					if (links.containsKey("rel"))
 						return;
 				}
 			}
