@@ -15,8 +15,6 @@ public class Value {
 	String[] array = {"abc", "def"};
 	List<String> list = new ArrayList<String>();
 	Map<String, Integer> map = new LinkedHashMap<String, Integer>();
-	List<? extends Object> _links;
-	List<? extends Object> _embedded;
 
 	public Value() {
 		list.add("ten");
@@ -32,20 +30,4 @@ public class Value {
 	public List<String> getList() { return list; }
 	public Map<String, Integer> getMap() {return map;}
 
-	public List<? extends Object> get_links() {
-		return _links;
-	}
-
-	public void set_links(List<? extends Object> _links) {
-		this._links = _links;
-	}
-
-	public List<? extends Object> get_embedded() {
-		return _embedded;
-	}
-
-	public void set_embedded(List<? extends Object> _embedded) {
-		this._embedded = _embedded;
-	}
-	
 }

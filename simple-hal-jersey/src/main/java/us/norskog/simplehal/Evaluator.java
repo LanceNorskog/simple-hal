@@ -1,6 +1,7 @@
 package us.norskog.simplehal;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,11 +59,22 @@ public class Evaluator {
 		return getLinks(response, null, links);
 	}
 	
+	
 	public List<Map<String, String>> evaluateEmbeddedItem(String name, Object response, Object item) {
 		if (links == null || embeddedLinks == null)
 			return null;
 		return getLinks(response, item, embeddedLinks.get(name));
 	}
+
+//	
+//	public Map<String, List<Map<String, String>>> evaluateEmbeddedItem(String name, Object response, Object item) {
+//		if (links == null || embeddedLinks == null)
+//			return null;
+//		Map<String, List<Map<String, String>>> single = new HashMap<String, List<Map<String, String>>>();
+//		List<Map<String, String>> links2 = getLinks(response, item, embeddedLinks.get(name));
+//		single.put(name, links2);
+//		return single;
+//	}
 	
 	public List<Map<String, String>> getLinks(Object response, Object item, List<Map<String, List<Expression>>> linksType) {
 		executor.setVar("response", response);

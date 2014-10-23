@@ -73,8 +73,8 @@ public class HelloWorldResource {
 			@Link(rel = "self", href = "/helloworld/embedded", title = "Self"),
 			@Link(rel = "first", href = "/helloworld/embedded?id=${response.first}", title = "First") }), 
 			embedded = {
-		@Embedded(name = "Constance", path = "hello", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
-		@Embedded(name = "Nullz", path = "${x}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+//		@Embedded(name = "Constance", path = "hello", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+//		@Embedded(name = "Nullz", path = "${x}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
 		@Embedded(name = "Objectificicated", path = "${response.first}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
 		@Embedded(name = "Arraysious", path = "${response.array}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
 		@Embedded(name = "Listicle", path = "${response.list}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
