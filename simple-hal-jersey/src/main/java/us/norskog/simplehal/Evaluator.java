@@ -22,16 +22,15 @@ public class Evaluator {
 
 	Evaluator(ParsedLinkSet parsedLinkSet) {
 		this.evLinkSet = parse(parsedLinkSet.getLinks());
-		Map<String, EmbeddedStore> embeddedMap = parsedLinkSet.getEmbeddedMap();
+		List<ItemStore> embeddedMap = parsedLinkSet.getEmbeddedMap();
 		if (embeddedMap != null) {
 			evEmbeddedSet = new evEmbeddedSet();
-			for(String name: embeddedMap.keySet()) {
-				EmbeddedStore store = embeddedMap.get(name);
+			for(ItemStore store: embeddedMap) {
 				evLinkSet parsedEmbedded = parse(store.getLinks());
 				evEmbedded embedded = new evEmbedded();
-				embedded.name = name;
+				embedded.name = store.getName();
 				embedded.evLinkSet = parsedEmbedded;
-				evEmbeddedSet.evEmbedded.put(name, embedded);
+				evEmbeddedSet.evEmbedded.put(store.getName(), embedded);
 			}
 		}
 	}

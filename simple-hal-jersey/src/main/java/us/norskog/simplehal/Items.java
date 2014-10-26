@@ -8,7 +8,7 @@ package us.norskog.simplehal;
  * 'check' expression decides whether to include this block.
  */
 
-public @interface ItemSet {
+public @interface Items {
 	/**
 	 * Name of embedded block
 	 */
@@ -16,7 +16,7 @@ public @interface ItemSet {
 	
 	/**
 	 * Expression used to fetch item value(s) for individual links. 
-	 * Each link in an embede found is visible to links expressions as 'item.key' and 'item.value'
+	 * Each link in an item found is visible to links expressions as 'item.key' and 'item.value'
 	 */
 	String items();
 	

@@ -23,10 +23,9 @@ public class Builder {
 	public Map<String, List<List<Map<String, String>>>> buildEmbedded(ParsedLinkSet parsedLinkSet,
 			Evaluator evaluator, Map<String, Object> response) {
 		if (parsedLinkSet.getEmbeddedMap() != null) {
-			Map<String, EmbeddedStore> storeMap = parsedLinkSet.getEmbeddedMap();
+			List<ItemStore> storeList = parsedLinkSet.getEmbeddedMap();
 			Map<String, List<List<Map<String, String>>>> itemChunk = new LinkedHashMap<String, List<List<Map<String, String>>>>();
-			for(String name: storeMap.keySet()) {
-				EmbeddedStore store = storeMap.get(name);
+			for(ItemStore store: storeList) {
 				List<List<Map<String, String>>> embeddedLinks = new ArrayList<List<Map<String, String>>>();
 				itemChunk.put(store.getName(), embeddedLinks);
 				if (store.getPath() != null) {

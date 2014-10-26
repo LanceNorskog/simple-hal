@@ -1,14 +1,13 @@
 package us.norskog.simplehal;
 
 import java.lang.annotation.Annotation;
+import java.lang.annotation.AnnotationFormatError;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import us.norskog.simplehal.jersey._Embedded;
 
 /*
  * Unpack Links/Link/Embedded annotation structure
@@ -19,57 +18,43 @@ public class ParsedLinkSet {
 	public final static String REL = "rel";
 	public final static String TITLE = "title";
 	public final static String HREF = "href";
-	private final static Map<Annotation[], ParsedLinkSet> parsedLinks = new ConcurrentHashMap<Annotation[], ParsedLinkSet>();
+	private final static Map<Integer, ParsedLinkSet> parsedAnnos = new ConcurrentHashMap<Integer, ParsedLinkSet>();
 
-	private Annotation[] annos;
-	private List<LinkStore> links;
-	private Map<String,EmbeddedStore> embeddedMap = null;
+	private Annotation[] annos = null;
+	private List<LinkStore> links = null;
+	private List<ItemStore> embeddedItems = null;
 
 	public ParsedLinkSet(Annotation[] annos) {
 		this.annos = annos;
-		for(Annotation anno: annos) {
-			if (anno.annotationType().equals(_Links.class)) {
-				_Links linksAnno = (_Links) anno;
-				LinkSet linkset = linksAnno.linkset();
-				links = new ArrayList<LinkStore>();
-				storeLinks(linkset, links);
-				ItemSet[] embeddedAnno = linksAnno.embedded();
-				if (embeddedAnno.length > 0) {
-					embeddedMap = new LinkedHashMap<String, EmbeddedStore>();
-					for(int i = 0; i < embeddedAnno.length; i++) {
-						ItemSet embedded = embeddedAnno[i];
-						storeEmbedded(embedded);
-					}
-				} 
-				this.hashCode();
-				break;
-			}
-			if (anno.annotationType().equals(_Embedded.class)) {
-				_Links linksAnno = (_Links) anno;
-				LinkSet linkset = linksAnno.linkset();
-				links = new ArrayList<LinkStore>();
-				storeLinks(linkset, links);
-				ItemSet[] embeddedAnno = linksAnno.embedded();
-				if (embeddedAnno.length > 0) {
-					embeddedMap = new LinkedHashMap<String, EmbeddedStore>();
-					for(int i = 0; i < embeddedAnno.length; i++) {
-						ItemSet embedded = embeddedAnno[i];
-						storeEmbedded(embedded);
-					}
-				} 
-				this.hashCode();
-				break;
+		_Links _linksAnno = (_Links) getAnno(annos, _Links.class);
+		_Embedded _embeddedAnno = (_Embedded) getAnno(annos, _Embedded.class);
+		if (_linksAnno != null) {
+			LinkSet linkset = _linksAnno.linkset();
+			links = storeLinks(linkset);
+		}
+		if (_embeddedAnno != null) {
+			Items[] items = _embeddedAnno.value();
+			if (items.length > 0) {
+				embeddedItems = new ArrayList<ItemStore>();
+				for(int i = 0; i < items.length; i++) {
+					Items item = items[i];
+					ItemStore store = storeItem(item);
+					embeddedItems.add(store);
+				}
 			}
 		}
+		if (links == null && embeddedItems != null)
+			throw new AnnotationFormatError("Method has @_Embedded but has no @_Links");
 	}
 
-	private void storeEmbedded(ItemSet embedded) {
-		List<LinkStore> embeddedLinks = new ArrayList<LinkStore>();
-		storeLinks(embedded.links(), embeddedLinks);
-		embeddedMap.put(embedded.name(), new EmbeddedStore(embedded.name(), embedded.items(), embeddedLinks));
+	private ItemStore storeItem(Items items) {
+		List<LinkStore> itemLinks = storeLinks(items.links());
+		ItemStore store = new ItemStore(items.name(), items.items(), itemLinks);
+		return store;
 	}
 
-	private void storeLinks(LinkSet linkset, List<LinkStore> links) {
+	private List<LinkStore> storeLinks(LinkSet linkset) {
+		List<LinkStore> links = new ArrayList<LinkStore>(); //new LinkStore(link.rel(), link.title(), link.href());
 		for(Link link: linkset.links()) {
 			LinkStore store = new LinkStore(link.rel(), link.title(), link.href());
 			store.setCheck(link.check());
@@ -96,64 +81,100 @@ public class ParsedLinkSet {
 			}
 			links.add(store);
 		}
+		return links;
 	}
 
 	public List<LinkStore> getLinks() {
 		return links;
 	}
 
-	public Map<String,EmbeddedStore> getEmbeddedMap() {
-		return embeddedMap;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (! (obj instanceof ParsedLinkSet))
-			return false;
-		return Arrays.equals(annos, ((ParsedLinkSet) obj).annos);
+	public List<ItemStore> getEmbeddedMap() {
+		return embeddedItems;
 	}
 
 	@Override
 	public int hashCode() {
-		return Arrays.hashCode(annos);
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(annos);
+		result = prime * result
+				+ ((embeddedItems == null) ? 0 : embeddedItems.hashCode());
+		result = prime * result + ((links == null) ? 0 : links.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ParsedLinkSet other = (ParsedLinkSet) obj;
+		if (!Arrays.equals(annos, other.annos))
+			return false;
+		if (embeddedItems == null) {
+			if (other.embeddedItems != null)
+				return false;
+		} else if (!embeddedItems.equals(other.embeddedItems))
+			return false;
+		if (links == null) {
+			if (other.links != null)
+				return false;
+		} else if (!links.equals(other.links))
+			return false;
+		return true;
 	}
 
 	public static ParsedLinkSet getParsedLinkSet(Annotation[] annos) {
-		if (parsedLinks.containsKey(annos)) {
-			return parsedLinks.get(annos);
-		}
-		if (hasLinks(annos)) {
-			ParsedLinkSet ga = new ParsedLinkSet(annos);
-			parsedLinks.put(annos, ga);
+		_Links links = (_Links) getAnno(annos, _Links.class);
+		_Embedded embedded = (_Embedded) getAnno(annos, _Embedded.class);
+		Integer code = new Integer(links.hashCode() ^ (embedded == null ? 0 : embedded.hashCode()));
+		ParsedLinkSet set = parsedAnnos.get(code);
+		if (set != null) {
+			set.hashCode();
+			return set;
 		} else {
-			parsedLinks.put(annos, null);
+			set = new ParsedLinkSet(annos);
+			parsedAnnos.put(code, set);
+			return set;
 		}
-		return parsedLinks.get(annos);
 	}
 
-	private static boolean hasLinks(Annotation[] annos) {
+	private static Annotation getAnno(Annotation[] annos, Class annoClass) {
 		for(Annotation anno: annos) {
-			if (anno.annotationType().equals(_Links.class)) {
-				return true;
+			if (anno.annotationType().equals(annoClass)) {
+				return anno;
 			}
 		}
-		return false;
+		return null;
 	}
 
 }
 
 class LinkStore {
+	private String name;
 	private String check = "true";
 	private Map<String,String> parts = new LinkedHashMap<String, String>();
 
 	public LinkStore(String rel, String title, String href) {
+		if (rel == null)
+			throw new IllegalArgumentException();
 		parts.put(ParsedLinkSet.REL, rel);
-		parts.put(ParsedLinkSet.TITLE, title);
+		if (title != null)
+			parts.put(ParsedLinkSet.TITLE, title);
+		if (href == null)
+			throw new IllegalArgumentException();
 		parts.put(ParsedLinkSet.HREF, href);
 	}
 
-	public void addPart(String key, String value) {
-		parts.put(key, value);
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Map<String,String> getParts() {
@@ -167,15 +188,20 @@ class LinkStore {
 	public void setCheck(String check) {
 		this.check = check;
 	}
+
+	public void addPart(String key, String value) {
+		parts.put(key, value);
+	}
+
 }
 
-class EmbeddedStore {
+class ItemStore {
 	private final String name;
 	private final String path;
 	private final List<LinkStore> links;
 	private String check = "";
 
-	public EmbeddedStore(String name, String path, List<LinkStore> links) {
+	public ItemStore(String name, String path, List<LinkStore> links) {
 		this.name = name;
 		this.path = path;
 		this.links = links;
@@ -200,5 +226,6 @@ class EmbeddedStore {
 	public void setCheck(String check) {
 		this.check = check;
 	}
+
 
 }

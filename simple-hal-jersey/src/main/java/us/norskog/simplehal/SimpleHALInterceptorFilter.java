@@ -33,6 +33,7 @@ import java.util.Map;
 
 @Provider
 @_Links(linkset = @LinkSet(links = { @Link(href = "", rel = "") }))
+@_Embedded(value = { @Items(items = "", links = @LinkSet(links = { @Link(href = "", rel = "") }), name = "") })
 public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerRequestFilter {
 	public static final String HAL = "application/hal+json";
 
@@ -61,10 +62,11 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 		try {
 			Object entity = context.getEntity();
 			Boolean boolean1 = doAlls.get();
-			if ((!boolean1 && !context.getMediaType().toString().equals(HAL)) || entity == null) {
+			if (!context.getMediaType().toString().equals(HAL) || entity == null) {
 				context.proceed();
 				return;
 			}
+			int code = context.getAnnotations().hashCode();
 			ParsedLinkSet parsedLinkSet = ParsedLinkSet.getParsedLinkSet(context.getAnnotations());
 			if (parsedLinkSet == null) {
 				context.proceed();
@@ -88,6 +90,8 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 			context.proceed();
 		} catch (RuntimeException e) {
 			throw e;
+		} finally {
+			baseURIs.set(null);
 		}
 	}
 
