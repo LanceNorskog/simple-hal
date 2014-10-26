@@ -24,7 +24,7 @@ public class Endpoint {
 			links = {
 					@Link(rel = "self", href = "/", title = "Self") }
 			),
-			embedded = @Embedded(name = "thing2", path = "thing.thing2", links = 
+			embedded = @Embedded(name = "thing2", items = "thing.thing2", links = 
 			@LinkSet(
 					links = {
 							@Link(rel = "self", href = "/", title = "Self") }

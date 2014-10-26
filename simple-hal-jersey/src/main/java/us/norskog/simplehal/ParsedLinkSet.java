@@ -48,20 +48,31 @@ public class ParsedLinkSet {
 	private void storeEmbedded(Embedded embedded) {
 		List<LinkStore> embeddedLinks = new ArrayList<LinkStore>();
 		storeLinks(embedded.links(), embeddedLinks);
-		embeddedMap.put(embedded.name(), new EmbeddedStore(embedded.name(), embedded.path(), embeddedLinks));
+		embeddedMap.put(embedded.name(), new EmbeddedStore(embedded.name(), embedded.items(), embeddedLinks));
 	}
 
 	private void storeLinks(LinkSet linkset, List<LinkStore> links) {
 		for(Link link: linkset.links()) {
 			LinkStore store = new LinkStore(link.rel(), link.title(), link.href());
-			if (link.more().length > 0) {
-				String[] more = link.more();
-				if (more.length % 2 == 1)
-					throw new IllegalArgumentException();
-				for(int i = 0; i < more.length; i+=2) {
-					String key = more[i];
-					String value = more[i + 1];
-					store.addPart(key, value);
+			Object[] moreOb = link.more();
+			if (moreOb.length > 0) {
+				try {
+					if (moreOb instanceof String[]) {
+						String[] more = (String[]) moreOb;
+						for(int i = 0; i < more.length; i+=2) {
+							String key = more[i];
+							String value = more[i + 1];
+							store.addPart(key, value);
+						}
+					} else if (moreOb instanceof String[][]) {
+						String[][] more = (String[][]) moreOb;
+						for(int i = 0; i < more.length; i++) {
+							store.addPart(more[i][0], more[i][1]);
+						}
+					}
+				} catch (ArrayIndexOutOfBoundsException e) {
+					e.printStackTrace();
+					throw new IllegalArgumentException("illegal more clause: odd number of values");
 				}
 			}
 			links.add(store);
@@ -113,6 +124,7 @@ public class ParsedLinkSet {
 }
 
 class LinkStore {
+	private String check = "";
 	private Map<String,String> parts = new LinkedHashMap<String, String>();
 
 	public LinkStore(String rel, String title, String href) {
@@ -128,12 +140,21 @@ class LinkStore {
 	public Map<String,String> getParts() {
 		return parts;
 	}
+
+	public String getCheck() {
+		return check;
+	}
+
+	public void setCheck(String check) {
+		this.check = check;
+	}
 }
 
 class EmbeddedStore {
 	private final String name;
 	private final String path;
 	private final List<LinkStore> links;
+	private String check = "";
 
 	public EmbeddedStore(String name, String path, List<LinkStore> links) {
 		this.name = name;
@@ -151,6 +172,14 @@ class EmbeddedStore {
 
 	public List<LinkStore> getLinks() {
 		return links;
+	}
+
+	public String getCheck() {
+		return check;
+	}
+
+	public void setCheck(String check) {
+		this.check = check;
 	}
 
 }

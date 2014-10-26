@@ -49,11 +49,9 @@ import us.norskog.simplehal.LinkSet;
 import us.norskog.simplehal.Link;
 import us.norskog.simplehal.Embedded;
 
-/**
- * @author Pavel Bucek (pavel.bucek at oracle.com)
- */
 @Path("helloworld")
 public class HelloWorldResource {
+	static Value value = null;
 
 	@GET
 	@Path("links")
@@ -63,7 +61,7 @@ public class HelloWorldResource {
 
 	@Produces({"application/hal+json",MediaType.APPLICATION_JSON})
 	public Value getValueLinks() {
-		return new Value();
+		return value;
 	}
 
 
@@ -73,17 +71,36 @@ public class HelloWorldResource {
 			@Link(rel = "self", href = "/helloworld/embedded", title = "Self"),
 			@Link(rel = "first", href = "/helloworld/embedded?id=${response.first}", title = "First") }), 
 			embedded = {
-//		@Embedded(name = "Constance", path = "hello", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
-//		@Embedded(name = "Nullz", path = "${x}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
-		@Embedded(name = "Objectificicated", path = "${response.first}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
-		@Embedded(name = "Arraysious", path = "${response.array}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
-		@Embedded(name = "Listicle", path = "${response.list}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
-		@Embedded(name = "Mappacious", path = "${response.map}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })) })
+		@Embedded(name = "Constance", items = "hello", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+		@Embedded(name = "Nullz", items = "${x}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+		@Embedded(name = "Objectificicated", items = "${response.first}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+		@Embedded(name = "Arraysious", items = "${response.array}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+		@Embedded(name = "Listicle", items = "${response.list}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+		@Embedded(name = "Mappacious", items = "${response.map}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })) })
 
 	@Produces({"application/hal+json",MediaType.APPLICATION_JSON})
 	public Value getValueEmbedded() {
-		return new Value();
+		return value;
 	}
 
+	@GET
+	@Path("check")
+	@Links(linkset = @LinkSet(links = {
+			@Link(rel = "self", href = "/helloworld/embedded", title = "Self"),
+			@Link(rel = "first", check = "${response.doFirst}", href = "/helloworld/embedded?id=${response.first}", title = "First") }), 
+			embedded = {
+		@Embedded(name = "Arraysious", check = "${response.doArray}", items = "${response.array}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+		@Embedded(name = "Listicle", check = "${response.doList}", items = "${response.list}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+		@Embedded(name = "Mappacious", check = "${response.doMap}", items = "${response.map}", 
+		links = @LinkSet(links = { @Link(rel = "only", check = "${item.key == 0}", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })) })
+
+	@Produces({"application/hal+json",MediaType.APPLICATION_JSON})
+	public Value getValueChecks() {
+		return value;
+	}
+
+	static void setValue(Value newValue) {
+		value = newValue;
+	}
 }
 
