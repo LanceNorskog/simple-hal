@@ -44,10 +44,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import us.norskog.simplehal.Links;
+import us.norskog.simplehal._Links;
 import us.norskog.simplehal.LinkSet;
 import us.norskog.simplehal.Link;
-import us.norskog.simplehal.Embedded;
+import us.norskog.simplehal.ItemSet;
 
 @Path("helloworld")
 public class HelloWorldResource {
@@ -55,46 +55,49 @@ public class HelloWorldResource {
 
 	@GET
 	@Path("links")
-	@Links(linkset = @LinkSet(links = {
+	@_Links(linkset = @LinkSet(links = {
 			@Link(rel = "self", href = "/helloworld/links", title = "Self"),
 			@Link(rel = "first", href = "/helloworld/links?id=${response.first}", title = "First") }))
-
-	@Produces({"application/hal+json",MediaType.APPLICATION_JSON})
+	@Produces({ "application/hal+json", MediaType.APPLICATION_JSON })
 	public Value getValueLinks() {
 		return value;
 	}
 
-
 	@GET
 	@Path("embedded")
-	@Links(linkset = @LinkSet(links = {
+	@_Links(linkset = @LinkSet(links = {
 			@Link(rel = "self", href = "/helloworld/embedded", title = "Self"),
-			@Link(rel = "first", href = "/helloworld/embedded?id=${response.first}", title = "First") }), 
-			embedded = {
-		@Embedded(name = "Constance", items = "hello", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
-		@Embedded(name = "Nullz", items = "${x}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
-		@Embedded(name = "Objectificicated", items = "${response.first}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
-		@Embedded(name = "Arraysious", items = "${response.array}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
-		@Embedded(name = "Listicle", items = "${response.list}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
-		@Embedded(name = "Mappacious", items = "${response.map}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })) })
-
-	@Produces({"application/hal+json",MediaType.APPLICATION_JSON})
+			@Link(rel = "first", href = "/helloworld/embedded?id=${response.first}", title = "First") }), embedded = {
+			@ItemSet(name = "Constance", items = "hello", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+			@ItemSet(name = "Nullz", items = "${x}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+			@ItemSet(name = "Objectificicated", items = "${response.first}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+			@ItemSet(name = "Arraysious", items = "${response.array}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+			@ItemSet(name = "Listicle", items = "${response.list}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+			@ItemSet(name = "Mappacious", items = "${response.map}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })) })
+	@Produces({ "application/hal+json", MediaType.APPLICATION_JSON })
 	public Value getValueEmbedded() {
 		return value;
 	}
 
 	@GET
 	@Path("check")
-	@Links(linkset = @LinkSet(links = {
+	@_Links(linkset = @LinkSet(links = {
 			@Link(rel = "self", href = "/helloworld/embedded", title = "Self"),
-			@Link(rel = "first", check = "${response.doFirst}", href = "/helloworld/embedded?id=${response.first}", title = "First") }), 
-			embedded = {
-		@Embedded(name = "Arraysious", check = "${response.doArray}", items = "${response.array}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
-		@Embedded(name = "Listicle", check = "${response.doList}", items = "${response.list}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
-		@Embedded(name = "Mappacious", check = "${response.doMap}", items = "${response.map}", 
-		links = @LinkSet(links = { @Link(rel = "only", check = "${item.key == 0}", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })) })
-
-	@Produces({"application/hal+json",MediaType.APPLICATION_JSON})
+			@Link(rel = "first", check = "${response.doFirst}", href = "/helloworld/embedded?id=${response.first}", title = "First") }), embedded = {
+			@ItemSet(name = "Firstacious", items = "hello", links = @LinkSet(links = { @Link(rel = "first", check = "${response.doFirst}", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+			@ItemSet(name = "Arraysious", items = "${response.array}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+			@ItemSet(name = "Listicle", items = "${response.list}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+			@ItemSet(name = "Mappacious", items = "${response.map}", links = @LinkSet(links = {
+					@Link(rel = "only", check = "${item.key == 0}", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}"),
+					@Link(rel = "first", check = "${response.doFirst}", href = "/helloworld/embedded?id=${response.first}", title = "First") })) })
+	@_Embedded({
+			@ItemSet(name = "Firstacious", items = "hello", links = @LinkSet(links = { @Link(rel = "first", check = "${response.doFirst}", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+			@ItemSet(name = "Arraysious", items = "${response.array}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+			@ItemSet(name = "Listicle", items = "${response.list}", links = @LinkSet(links = { @Link(rel = "only", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}") })),
+			@ItemSet(name = "Mappacious", items = "${response.map}", links = @LinkSet(links = {
+					@Link(rel = "only", check = "${item.key == 0}", href = "/helloworld/embedded?id=${item.value}", title = "id ${item.key}"),
+					@Link(rel = "first", check = "${response.doFirst}", href = "/helloworld/embedded?id=${response.first}", title = "First") })) })
+	@Produces({ "application/hal+json", MediaType.APPLICATION_JSON })
 	public Value getValueChecks() {
 		return value;
 	}
@@ -103,4 +106,3 @@ public class HelloWorldResource {
 		value = newValue;
 	}
 }
-

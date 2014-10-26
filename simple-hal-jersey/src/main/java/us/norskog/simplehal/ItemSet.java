@@ -8,7 +8,7 @@ package us.norskog.simplehal;
  * 'check' expression decides whether to include this block.
  */
 
-public @interface Embedded {
+public @interface ItemSet {
 	/**
 	 * Name of embedded block
 	 */

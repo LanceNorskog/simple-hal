@@ -1,9 +1,9 @@
 package us.norskog.simplehal;
 
-import us.norskog.simplehal.Embedded;
+import us.norskog.simplehal.ItemSet;
 import us.norskog.simplehal.Link;
 import us.norskog.simplehal.LinkSet;
-import us.norskog.simplehal.Links;
+import us.norskog.simplehal._Links;
 
 /*
  * Endpoint test for links
@@ -11,7 +11,7 @@ import us.norskog.simplehal.Links;
 
 public class Endpoint {
 
-	@Links(linkset = @LinkSet(
+	@_Links(linkset = @LinkSet(
 			links = {
 					@Link(rel = "self", href = "/", title = "Self") }
 			)
@@ -20,11 +20,11 @@ public class Endpoint {
 		return "[]";
 	}
 
-	@Links(linkset = @LinkSet(
+	@_Links(linkset = @LinkSet(
 			links = {
 					@Link(rel = "self", href = "/", title = "Self") }
 			),
-			embedded = @Embedded(name = "thing2", items = "thing.thing2", links = 
+			embedded = @ItemSet(name = "thing2", items = "thing.thing2", links = 
 			@LinkSet(
 					links = {
 							@Link(rel = "self", href = "/", title = "Self") }

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import us.norskog.simplehal.jersey._Embedded;
+
 /*
  * Unpack Links/Link/Embedded annotation structure
  * into named objects.
@@ -26,16 +28,32 @@ public class ParsedLinkSet {
 	public ParsedLinkSet(Annotation[] annos) {
 		this.annos = annos;
 		for(Annotation anno: annos) {
-			if (anno.annotationType().equals(Links.class)) {
-				Links linksAnno = (Links) anno;
+			if (anno.annotationType().equals(_Links.class)) {
+				_Links linksAnno = (_Links) anno;
 				LinkSet linkset = linksAnno.linkset();
 				links = new ArrayList<LinkStore>();
 				storeLinks(linkset, links);
-				Embedded[] embeddedAnno = linksAnno.embedded();
+				ItemSet[] embeddedAnno = linksAnno.embedded();
 				if (embeddedAnno.length > 0) {
 					embeddedMap = new LinkedHashMap<String, EmbeddedStore>();
 					for(int i = 0; i < embeddedAnno.length; i++) {
-						Embedded embedded = embeddedAnno[i];
+						ItemSet embedded = embeddedAnno[i];
+						storeEmbedded(embedded);
+					}
+				} 
+				this.hashCode();
+				break;
+			}
+			if (anno.annotationType().equals(_Embedded.class)) {
+				_Links linksAnno = (_Links) anno;
+				LinkSet linkset = linksAnno.linkset();
+				links = new ArrayList<LinkStore>();
+				storeLinks(linkset, links);
+				ItemSet[] embeddedAnno = linksAnno.embedded();
+				if (embeddedAnno.length > 0) {
+					embeddedMap = new LinkedHashMap<String, EmbeddedStore>();
+					for(int i = 0; i < embeddedAnno.length; i++) {
+						ItemSet embedded = embeddedAnno[i];
 						storeEmbedded(embedded);
 					}
 				} 
@@ -45,7 +63,7 @@ public class ParsedLinkSet {
 		}
 	}
 
-	private void storeEmbedded(Embedded embedded) {
+	private void storeEmbedded(ItemSet embedded) {
 		List<LinkStore> embeddedLinks = new ArrayList<LinkStore>();
 		storeLinks(embedded.links(), embeddedLinks);
 		embeddedMap.put(embedded.name(), new EmbeddedStore(embedded.name(), embedded.items(), embeddedLinks));
@@ -54,6 +72,7 @@ public class ParsedLinkSet {
 	private void storeLinks(LinkSet linkset, List<LinkStore> links) {
 		for(Link link: linkset.links()) {
 			LinkStore store = new LinkStore(link.rel(), link.title(), link.href());
+			store.setCheck(link.check());
 			Object[] moreOb = link.more();
 			if (moreOb.length > 0) {
 				try {
@@ -114,7 +133,7 @@ public class ParsedLinkSet {
 
 	private static boolean hasLinks(Annotation[] annos) {
 		for(Annotation anno: annos) {
-			if (anno.annotationType().equals(Links.class)) {
+			if (anno.annotationType().equals(_Links.class)) {
 				return true;
 			}
 		}
@@ -124,7 +143,7 @@ public class ParsedLinkSet {
 }
 
 class LinkStore {
-	private String check = "";
+	private String check = "true";
 	private Map<String,String> parts = new LinkedHashMap<String, String>();
 
 	public LinkStore(String rel, String title, String href) {

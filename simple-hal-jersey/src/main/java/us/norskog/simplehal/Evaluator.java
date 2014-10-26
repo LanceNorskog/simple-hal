@@ -14,6 +14,7 @@ import java.util.Map;
  */
 
 public class Evaluator {
+	private static String TRUE = "true";
 	Executor executor = new Executor();
 
 	private evLinkSet evLinkSet = null;
@@ -47,6 +48,10 @@ public class Evaluator {
 				}
 				link.parts.put(part, expressions);
 			}
+//			if (! store.getCheck().equals(TRUE)) {
+				Parser p = new Parser(store.getCheck());
+				link.check = p.expressions;
+//			}
 			parsed.evLinks.add(link);
 		}
 		return parsed;
@@ -62,8 +67,7 @@ public class Evaluator {
 			return null;
 		List<Map<String, String>> linkSet = getLinks(response, null, evLinkSet);
 		return linkSet;
-	}
-	
+	}	
 	
 	public List<Map<String, String>> evaluateEmbeddedItem(String name, Object response, Object item) {
 		if (evLinkSet == null || evEmbeddedSet == null)
@@ -81,24 +85,38 @@ public class Evaluator {
 			Map<String, String> linkSetPart = getLink(evLink);
 			if (linkSetPart != null)
 				linkSet.add(linkSetPart);
+			else
+				this.hashCode();
 		}
 		return linkSet;
 	}
 
 	private Map<String, String> getLink(evLink evLink) {
+		if (evLink.check != null) {
+			String evaled = evaluateExpression(evLink.check);
+			if (!evaled.equals("1") && !evaled.equals("true")) 
+				return null;
+		}
 		Map<String, String> linkSetPart = new LinkedHashMap<String, String>();
 		for(String linkParts: evLink.parts.keySet()) {
-			StringBuilder sb = new StringBuilder();
-			for(Expression expression: evLink.parts.get(linkParts)) {
-				Object evaluated = expression.eval(executor);
-				if (evaluated == null)
-					return null;
-				String value = evaluated.toString();	
-				sb.append(value);
-			}
-			linkSetPart.put(linkParts, sb.toString());
+			String evaled = evaluateExpression(evLink.parts.get(linkParts));
+			if (evaled == null)
+				evaled = "#NULL";
+			linkSetPart.put(linkParts, evaled);
 		}
 		return linkSetPart;
+	}
+
+	private String evaluateExpression(List<Expression> parts) {
+		StringBuilder sb = new StringBuilder();
+		for(Expression expression: parts) {
+			Object evaluated = expression.eval(executor);
+			if (evaluated == null)
+				return null;
+			String value = evaluated.toString();	
+			sb.append(value);
+		}
+		return sb.toString();
 	}
 
 }
@@ -109,7 +127,7 @@ class evLinkSet {
 
 class evLink {
 	Map<String, List<Expression>> parts = new HashMap<String, List<Expression>>();
-	Expression check;
+	List<Expression> check;
 }
 
 class evEmbeddedSet {

@@ -27,10 +27,12 @@ import java.util.Map;
  * Filter on the intake because only Filters get to see the base app's URI.
  * Interceptor on the outgo because only Interceptors get the data.
  * Oy!
+ * 
+ * TODO: method must have an @GET or @HEAD
  */
 
 @Provider
-@Links(linkset = @LinkSet(links = { @Link(href = "", rel = "") }))
+@_Links(linkset = @LinkSet(links = { @Link(href = "", rel = "") }))
 public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerRequestFilter {
 	public static final String HAL = "application/hal+json";
 

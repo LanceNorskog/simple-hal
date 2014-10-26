@@ -39,26 +39,30 @@ public class Builder {
 						for(int i = 0; i < obs.length; i++) {
 							KV kv = new KV(Integer.toString(i), obs[i]);
 							links = evaluator.evaluateEmbeddedItem(store.getName(), response, kv);
-							embeddedLinks.add(links);
+							if (links != null)
+								embeddedLinks.add(links);						
 						}
 					} else if (items instanceof Map) {
 						for(Object key: ((Map<String,Object>) items).keySet()) {
 							KV kv = new KV(key.toString(), ((Map<?, ?>) items).get(key.toString()));
 							links = evaluator.evaluateEmbeddedItem(store.getName(), response, kv);
-							embeddedLinks.add(links);						
+							if (links != null)
+								embeddedLinks.add(links);						
 						}
 					} else if (items instanceof Collection) {
 						int i = 0;
 						for(Object ob: (Collection<?>) items) {
 							KV kv = new KV(Integer.toString(i), ob);
 							links = evaluator.evaluateEmbeddedItem(store.getName(), response, kv);
-							embeddedLinks.add(links);		
+							if (links != null)
+								embeddedLinks.add(links);						
 							i++;
 						}
 					} else {
 						KV kv = new KV("0", items);
 						links = evaluator.evaluateEmbeddedItem(store.getName(), response, kv);
-						embeddedLinks.add(links);
+						if (links != null)
+							embeddedLinks.add(links);						
 					}
 				}
 			}

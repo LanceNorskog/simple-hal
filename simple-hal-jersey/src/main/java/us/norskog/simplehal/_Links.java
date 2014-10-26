@@ -16,8 +16,8 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Links {
+public @interface _Links {
 	LinkSet linkset();
-	Embedded[] embedded() default {};
+	ItemSet[] embedded() default {};
 	String check() default "true";
 }
