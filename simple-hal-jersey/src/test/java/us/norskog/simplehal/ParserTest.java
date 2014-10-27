@@ -125,8 +125,13 @@ public class ParserTest {
 
     private void illegal(String expr) throws Exception {
         try {
-            new Parser(expr);
-            throw new Exception("Expr should not parse: " + expr);
+            Parser p = new Parser(expr);
+            List<Expression> parts = p.getExpressions();
+            for(Expression part: parts) {
+            	if (part.toString().equals("#NULL"))
+            		return;
+            }
+            throw new Exception("Expr should not parse or #NULL: " + expr);
         } catch (IllegalArgumentException e) {
         }
     }

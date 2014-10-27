@@ -70,7 +70,6 @@ public class SimpleTest extends JerseyTest {
 		Builder request = target("helloworld/links").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
 		final Map unpacked = request.get(Map.class);
 		Object links = unpacked.get("_links");
-		links.hashCode();
 		LinksHAL linksHAL = LinksHAL.unpack(links);
 		for(Map<String, String> link: linksHAL) {
 			if (link.get("rel").equals("self"))
@@ -85,13 +84,10 @@ public class SimpleTest extends JerseyTest {
 		Builder request = target("helloworld/embedded").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
 		final Map unpacked = request.get(Map.class);
 		Object embedded = unpacked.get("_embedded");
-		embedded.hashCode();
 		EmbeddedHAL embeddedHAL = EmbeddedHAL.unpack(embedded);
-		System.out.println(embeddedHAL.keySet().toString());
 		for(List<List<Map<String,String>>> outer: embeddedHAL.values()) {
 			for(List<Map<String, String>> inner: outer) {
 				for(Map<String, String> links: inner) {
-					System.out.println(links.keySet().toString());
 					if (links.containsKey("rel"))
 						return;
 				}
@@ -108,11 +104,8 @@ public class SimpleTest extends JerseyTest {
 		Builder request = target("helloworld/check").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
 		final Map unpacked = request.get(Map.class);
 		Object linkSet = unpacked.get("_links");
-		linkSet.hashCode();
 		LinksHAL linksHal = LinksHAL.unpack(linkSet);
-		System.out.println("link to check: " + linksHal.toString());
 		for(Map<String, String> links: linksHal) {
-			System.out.println("First links: " + links.keySet().toString());
 			if (links.get("rel").equals("first"))
 				assertTrue(false);
 		}
@@ -129,14 +122,13 @@ public class SimpleTest extends JerseyTest {
 		Builder request = target("helloworld/check").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
 		final Map unpacked = request.get(Map.class);
 		Object embedded = unpacked.get("_embedded");
-		embedded.hashCode();
 		EmbeddedHAL embeddedHAL = EmbeddedHAL.unpack(embedded);
-		System.out.println(embeddedHAL.keySet().toString());
 		assertTrue(embeddedHAL.keySet().contains("Mappacious"));
+		assertFalse(embeddedHAL.keySet().contains("Arraysious"));
+		assertFalse(embeddedHAL.keySet().contains("Listicle"));
 		for(List<List<Map<String,String>>> outer: embeddedHAL.values()) {
 			for(List<Map<String, String>> inner: outer) {
 				for(Map<String, String> links: inner) {
-					System.out.println("First links: " + links.keySet().toString());
 					if (links.get("rel").equals("first"))
 						assertTrue(false);
 				}

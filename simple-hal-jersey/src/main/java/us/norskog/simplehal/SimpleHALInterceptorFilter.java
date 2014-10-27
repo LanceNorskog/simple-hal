@@ -45,7 +45,6 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 	static Map<ParsedLinkSet, Evaluator> evaluators = new LinkedHashMap<ParsedLinkSet, Evaluator>();;
 
 	public SimpleHALInterceptorFilter() {
-		System.out.println("SimpleHALInterceptorFilter created");
 	}
 
 	public void filter(ContainerRequestContext requestContext)
@@ -66,7 +65,6 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 				context.proceed();
 				return;
 			}
-			int code = context.getAnnotations().hashCode();
 			ParsedLinkSet parsedLinkSet = ParsedLinkSet.getParsedLinkSet(context.getAnnotations());
 			if (parsedLinkSet == null) {
 				context.proceed();
@@ -124,16 +122,5 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 		}
 		return evaluators.get(parsedLinkSet);
 	}
-
-	//	void dumpContext(WriterInterceptorContext context) {
-	//		System.out.println("getType: " + context.getType().getClass());
-	//		System.out.println("getEntity: " + context.getEntity().getClass());
-	//		System.out.println("getGenericType: " + context.getGenericType().getTypeName());
-	//		System.out.println("getMediaType: " + context.getMediaType().toString());
-	//		Annotation[] annos = context.getAnnotations();
-	//		for(Annotation anno: annos) {
-	//			System.out.println("\tanno: " + anno.toString());
-	//		}
-	//	}
 
 }

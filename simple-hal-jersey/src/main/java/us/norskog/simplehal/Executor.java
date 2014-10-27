@@ -67,17 +67,10 @@ public class Executor {
 	public Object evalExpr(String single) {
 		Object raw = eval(single);
 		return raw;
-//		if (raw == null)
-//			return null;
-//		System.out.println("Class of " + single + ": " + raw.getClass());
-//		String cooked = raw.toString();
-//		System.out.println("Value of " + single + ": " + cooked);
-//		return cooked;
 	}
 
 	public List<Object> getList(String selector) {
 		Object raw = eval(selector);
-		System.out.println("Class of " + selector + ": " + raw.getClass());
 		if (raw instanceof List)
 			return (List<Object>) raw;
 		if (raw.getClass().isArray()) {

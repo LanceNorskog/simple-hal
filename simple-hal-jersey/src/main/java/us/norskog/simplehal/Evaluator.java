@@ -84,8 +84,6 @@ public class Evaluator {
 			Map<String, String> linkSetPart = getLink(evLink);
 			if (linkSetPart != null)
 				linkSet.add(linkSetPart);
-			else
-				this.hashCode();
 		}
 		return linkSet;
 	}

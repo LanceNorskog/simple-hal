@@ -24,9 +24,4 @@ public @interface Items {
 	 * Individual links generated from all items returned by expression
 	 */
 	LinkSet links();
-	
-	/**
-	 * Check expression. If 0 or 'false' or NULL or empty string, do not include this entire linkSet.
-	 */
-	String check() default "true";
 }

@@ -53,7 +53,6 @@ public class Mapify {
 	//
 	//		ObjectMapper om = new ObjectMapper();
 	//		Map<String, Object> objectAsMap = om.convertValue(obj, Map.class);
-	//		System.err.println("map: " + objectAsMap.toString());
 	//		return objectAsMap;
 	//	}
 

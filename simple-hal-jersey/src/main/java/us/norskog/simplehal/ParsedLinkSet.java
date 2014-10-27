@@ -43,8 +43,6 @@ public class ParsedLinkSet {
 				}
 			}
 		}
-		if (links == null && embeddedItems != null)
-			throw new AnnotationFormatError("Method has @_Embedded but has no @_Links");
 	}
 
 	private ItemStore storeItem(Items items) {
@@ -54,10 +52,11 @@ public class ParsedLinkSet {
 	}
 
 	private List<LinkStore> storeLinks(LinkSet linkset) {
-		List<LinkStore> links = new ArrayList<LinkStore>(); //new LinkStore(link.rel(), link.title(), link.href());
+		List<LinkStore> links = new ArrayList<LinkStore>(); 
 		for(Link link: linkset.links()) {
 			LinkStore store = new LinkStore(link.rel(), link.title(), link.href());
-			store.setCheck(link.check());
+			if (! link.check().equals("true"))
+				store.setCheck(link.check());
 			Object[] moreOb = link.more();
 			if (moreOb.length > 0) {
 				try {
@@ -68,15 +67,10 @@ public class ParsedLinkSet {
 							String value = more[i + 1];
 							store.addPart(key, value);
 						}
-					} else if (moreOb instanceof String[][]) {
-						String[][] more = (String[][]) moreOb;
-						for(int i = 0; i < more.length; i++) {
-							store.addPart(more[i][0], more[i][1]);
-						}
 					}
 				} catch (ArrayIndexOutOfBoundsException e) {
 					e.printStackTrace();
-					throw new IllegalArgumentException("illegal more clause: odd number of values");
+					store.addPart("error", "illegal more clause: odd number of values");
 				}
 			}
 			links.add(store);
@@ -133,7 +127,6 @@ public class ParsedLinkSet {
 		Integer code = new Integer(links.hashCode() ^ (embedded == null ? 0 : embedded.hashCode()));
 		ParsedLinkSet set = parsedAnnos.get(code);
 		if (set != null) {
-			set.hashCode();
 			return set;
 		} else {
 			set = new ParsedLinkSet(annos);
@@ -160,12 +153,12 @@ class LinkStore {
 
 	public LinkStore(String rel, String title, String href) {
 		if (rel == null)
-			throw new IllegalArgumentException();
+			rel = "#NULL";
 		parts.put(ParsedLinkSet.REL, rel);
 		if (title != null)
 			parts.put(ParsedLinkSet.TITLE, title);
 		if (href == null)
-			throw new IllegalArgumentException();
+			href = "#NULL";
 		parts.put(ParsedLinkSet.HREF, href);
 	}
 

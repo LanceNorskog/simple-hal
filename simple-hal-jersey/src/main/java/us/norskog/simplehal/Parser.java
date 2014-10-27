@@ -24,7 +24,8 @@ public class Parser {
                         expressions.add(new Expression(sb.toString(), true));
                         sb.setLength(0);
                     } else {
-                        throw new IllegalArgumentException();
+                    	expressions.add(new Expression("#NULL", false));
+                    	return;
                     }
                     el = false;
                 } else {
@@ -32,8 +33,10 @@ public class Parser {
                 }
             } else {
                 if (ch == '$') {
-                    if (i + 1 == spec.length() || ! (spec.charAt(i + 1) == '{'))
-                        throw new IllegalArgumentException();
+                    if (i + 1 == spec.length() || ! (spec.charAt(i + 1) == '{')) {
+                    	expressions.add(new Expression("#NULL", false));
+                    	return;
+                    }
                     i++;
                     if (sb.length() > 0) {
                         expressions.add(new Expression(sb.toString(), false));
@@ -43,15 +46,16 @@ public class Parser {
                     el = true;
                     doEl = true;
                 } else if (ch == '{' || ch == '}') {
-                    throw new IllegalArgumentException();
+                	expressions.add(new Expression("#NULL", false));
+                	return;
                 } else {
                         sb.append(ch);
                 }
             }
         }
         if (el)
-            throw new IllegalArgumentException();
-        if (sb.length() > 0 || expressions.size() == 0)
+            expressions.add(new Expression("#NULL", false));
+        else if (sb.length() > 0 || expressions.size() == 0)
             expressions.add(new Expression(sb.toString(), false));
     }
 
