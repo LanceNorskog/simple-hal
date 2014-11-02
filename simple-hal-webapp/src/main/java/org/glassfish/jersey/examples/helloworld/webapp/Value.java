@@ -1,4 +1,4 @@
-package us.norskog.simplehal.jersey;
+package org.glassfish.jersey.examples.helloworld.webapp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 @XmlRootElement
-public class ValueHAL {
+public class Value {
 	String first = "one";
 	String second = "two";
 	String[] array = {"abc", "def"};
@@ -20,7 +20,7 @@ public class ValueHAL {
 	Boolean doList = true;
 	Boolean doMap = true;
 
-	public ValueHAL() {
+	public Value() {
 		list.add("ten");
 		list.add("eleven");
 		map.put("100", 100);
