@@ -12,7 +12,7 @@ import java.lang.annotation.Annotation;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +42,7 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 	static Mapify mapifier = new Mapify();
 	static Builder builder = new Builder();
 	static Formatter formatter = new SimpleFormatter();
-	static Map<ParsedLinkSet, Evaluator> evaluators = new LinkedHashMap<ParsedLinkSet, Evaluator>();;
+	static Map<ParsedLinkSet, Evaluator> evaluators = new HashMap<ParsedLinkSet, Evaluator>();;
 
 	public SimpleHALInterceptorFilter() {
 	}
@@ -73,17 +73,19 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 
 			Evaluator evaluator = init(parsedLinkSet);
 			Map<String, Object> response = mapifier.convertToMap(entity);
-			List<Map<String, String>> builtLinks = builder.buildLinks(parsedLinkSet, evaluator, response);
-			Map<String, List<List<Map<String, String>>>> builtEmbedded = builder.buildEmbedded(parsedLinkSet, evaluator, response);
-			Map<String, Object> formatted = formatter.format(response, builtLinks, builtEmbedded);
+			LinksetMap builtLinks = builder.buildLinks(parsedLinkSet, evaluator, response);
 			addBaseURI(builtLinks);
+			Map<String, EmbeddedMap> builtEmbedded = builder.buildEmbedded(parsedLinkSet, evaluator, response);
 			if (builtEmbedded != null) {
-				for(List<List<Map<String, String>>> embeddedSet: builtEmbedded.values()) {
-					for(List<Map<String, String>> embedded: embeddedSet) {
-						addBaseURI(embedded);
+				for( EmbeddedMap em: builtEmbedded.values()) {
+					for(LinksetList embedded: em.values()) {
+						for(LinksetMap ls: embedded) {
+							addBaseURI(ls);
+						}
 					}
 				}
 			}
+			Map<String, Object> formatted = formatter.format(response, builtLinks, builtEmbedded);
 			context.setEntity(formatted);
 			context.proceed();
 		} catch (RuntimeException e) {
@@ -93,14 +95,20 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 		}
 	}
 
-	private void addBaseURI(List<Map<String, String>> links) {
+	private Object mapify(Map<String, Object> formatted) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private void addBaseURI(LinksetMap builtLinks) {
 		String baseURI = getBaseURI();
-		for(Map<String,String> link: links) {
-			String href = link.get("href");
+		for(String key: builtLinks.keySet()) {
+			LinkPartsMap linkMap = builtLinks.get(key);
+			String href = linkMap.get("href");
 			if (href != null) {
 				if (href.startsWith("/"))
 					href = href.substring(1);
-				link.put("href", baseURI + "/" + href);
+				linkMap.put("href", baseURI + "/" + href);
 			}
 		}
 	}

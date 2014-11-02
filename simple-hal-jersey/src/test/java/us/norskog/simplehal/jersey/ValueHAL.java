@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 @XmlRootElement
-public class Value {
+public class ValueHAL {
 	String first = "one";
 	String second = "two";
 	String[] array = {"abc", "def"};
@@ -20,7 +20,7 @@ public class Value {
 	Boolean doList = true;
 	Boolean doMap = true;
 
-	public Value() {
+	public ValueHAL() {
 		list.add("ten");
 		list.add("eleven");
 		map.put("100", 100);

@@ -1,7 +1,7 @@
 package us.norskog.simplehal;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 
 public class Mapify {
-	private static final Map<String,Object> mapclass = new LinkedHashMap<String, Object>();
+	private static final Map<String,Object> mapclass = new HashMap<String, Object>();
 	// not sure if ThreadLocal needed. Have had weird probs with sharing Jackson in the past.
 	private static ThreadLocal<ObjectMapper> mappers = new ThreadLocal<ObjectMapper>();
 
@@ -76,7 +76,7 @@ public class Mapify {
 	//			
 	//		}
 	//			
-	//		Map<String, Object> objectAsMap = new LinkedHashMap<String, Object>();
+	//		Map<String, Object> objectAsMap = new HashMap<String, Object>();
 	//		BeanInfo info = Introspector.getBeanInfo(obj.getClass());
 	//		for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
 	//			Method reader = pd.getReadMethod();
@@ -97,7 +97,7 @@ public class Mapify {
 	//			
 	//		}
 	//			
-	//		Map<String, Object> objectAsMap = new LinkedHashMap<String, Object>();
+	//		Map<String, Object> objectAsMap = new HashMap<String, Object>();
 	//		BeanInfo info = Introspector.getBeanInfo(obj.getClass());
 	//		for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
 	//			Method reader = pd.getReadMethod();

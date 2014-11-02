@@ -2,7 +2,7 @@ package us.norskog.simplehal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,29 +61,32 @@ public class Evaluator {
 		return ob;
 	}
 	
-	public List<Map<String, String>> evaluateLinks(Object response) {
+	public Map<String, Map<String, String>> evaluateLinks(Object response) {
 		if (evLinkSet == null)
 			return null;
-		List<Map<String, String>> linkSet = getLinks(response, null, evLinkSet);
+		Map<String, Map<String, String>> linkSet = getLinks(response, null, evLinkSet);
 		return linkSet;
 	}	
 	
-	public List<Map<String, String>> evaluateEmbeddedItem(String name, Object response, Object item) {
+	public Map<String, Map<String, String>> evaluateEmbeddedItem(String name, Object response, Object item) {
 		if (evLinkSet == null || evEmbeddedSet == null)
 			return null;
 		return getLinks(response, item, evEmbeddedSet.evEmbedded.get(name).evLinkSet);
 	}
 
-	private List<Map<String, String>> getLinks(Object response, Object item, 
+	private Map<String,Map<String, String>> getLinks(Object response, Object item, 
 			evLinkSet evLinkSet) {
 		executor.setVar("response", response);
 		if (item != null)
 			executor.setVar("item", item);
-		List<Map<String, String>> linkSet = new ArrayList<Map<String, String>>();
+		Map<String,Map<String, String>> linkSet = new HashMap<String, Map<String,String>>();
 		for(evLink evLink: evLinkSet.evLinks) {
 			Map<String, String> linkSetPart = getLink(evLink);
-			if (linkSetPart != null)
-				linkSet.add(linkSetPart);
+			if (linkSetPart != null) {
+				String name = linkSetPart.get("rel");
+				linkSetPart.remove("rel");
+				linkSet.put(name,linkSetPart);
+			}
 		}
 		return linkSet;
 	}
@@ -94,7 +97,7 @@ public class Evaluator {
 			if (!evaled.equals("1") && !evaled.equals("true")) 
 				return null;
 		}
-		Map<String, String> linkSetPart = new LinkedHashMap<String, String>();
+		Map<String, String> linkSetPart = new HashMap<String, String>();
 		for(String linkParts: evLink.parts.keySet()) {
 			String evaled = evaluateExpression(evLink.parts.get(linkParts));
 			if (evaled == null)

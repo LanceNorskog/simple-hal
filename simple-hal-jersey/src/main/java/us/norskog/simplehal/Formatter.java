@@ -12,7 +12,7 @@ import java.util.Map;
 
 public interface Formatter {
 	
-	public Map<String, Object> format(Map<String, Object> response, List<Map<String, String>> builtLinks, 
-			Map<String, List<List<Map<String, String>>>> builtEmbedded);
+	public Map<String, Object> format(Map<String, Object> response, LinksetMap builtLinks, 
+			Map<String, EmbeddedMap> builtEmbedded);
 
 }

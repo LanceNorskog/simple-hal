@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.AnnotationFormatError;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -149,7 +149,7 @@ public class ParsedLinkSet {
 class LinkStore {
 	private String name;
 	private String check = "true";
-	private Map<String,String> parts = new LinkedHashMap<String, String>();
+	private Map<String,String> parts = new HashMap<String, String>();
 
 	public LinkStore(String rel, String title, String href) {
 		if (rel == null)

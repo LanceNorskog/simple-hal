@@ -1,10 +1,16 @@
 package us.norskog.simplehal;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * 
@@ -14,22 +20,28 @@ import java.util.Map;
 
 public class Builder {
 
-	public List<Map<String, String>> buildLinks(ParsedLinkSet parsedLinkSet,
+	public LinksetMap buildLinks(ParsedLinkSet parsedLinkSet,
 			Evaluator evaluator, Map<String, Object> response) {
-		List<Map<String, String>> expanded = evaluator.evaluateLinks(response);
-		return expanded;
+		Map<String, Map<String, String>> expanded = evaluator.evaluateLinks(response);
+//		mapify(expanded);
+		LinksetMap lsm = new LinksetMap();
+		lsm.setMap(expanded);
+		return lsm;
 	}
 
-	public Map<String, List<List<Map<String, String>>>> buildEmbedded(ParsedLinkSet parsedLinkSet,
+	public Map<String, EmbeddedMap> buildEmbedded(ParsedLinkSet parsedLinkSet,
 			Evaluator evaluator, Map<String, Object> response) {
 		if (parsedLinkSet.getEmbeddedMap() != null) {
 			List<ItemStore> storeList = parsedLinkSet.getEmbeddedMap();
-			Map<String, List<List<Map<String, String>>>> itemChunk = new LinkedHashMap<String, List<List<Map<String, String>>>>();
+			Map<String, EmbeddedMap> _embedded = new HashMap<String, EmbeddedMap>();
 			for(ItemStore store: storeList) {
-				List<List<Map<String, String>>> embeddedLinks = new ArrayList<List<Map<String, String>>>();
-				itemChunk.put(store.getName(), embeddedLinks);
+				LinksetList embeddedLinks = new LinksetList();
+//				embeddedLinks.setLinksetList(new ArrayList<LinksetMap>());
+				EmbeddedMap _links = new EmbeddedMap();
+				_links.put("_links", embeddedLinks);
+				_embedded.put(store.getName(), _links);
 				if (store.getPath() != null) {
-					List<Map<String, String>> links = null;
+					LinksetMap links = new LinksetMap();
 					Object items = evaluator.evaluateExpr(store.getPath());
 					if (items == null)
 						continue;
@@ -37,37 +49,74 @@ public class Builder {
 						Object[] obs = (Object[]) items;
 						for(int i = 0; i < obs.length; i++) {
 							KV kv = new KV(Integer.toString(i), obs[i]);
-							links = evaluator.evaluateEmbeddedItem(store.getName(), response, kv);
-							if (links != null)
-								embeddedLinks.add(links);						
+							links.setMap(evaluator.evaluateEmbeddedItem(store.getName(), response, kv));
+							if (links.size() > 0)
+								embeddedLinks.add(links);	
+//							mapify(links);
 						}
 					} else if (items instanceof Map) {
 						for(Object key: ((Map<String,Object>) items).keySet()) {
 							KV kv = new KV(key.toString(), ((Map<?, ?>) items).get(key.toString()));
-							links = evaluator.evaluateEmbeddedItem(store.getName(), response, kv);
-							if (links != null)
-								embeddedLinks.add(links);						
+							links.setMap(evaluator.evaluateEmbeddedItem(store.getName(), response, kv));
+							if (links.size() > 0)
+								embeddedLinks.add(links);	
+//							mapify(links);
+
 						}
 					} else if (items instanceof Collection) {
 						int i = 0;
 						for(Object ob: (Collection<?>) items) {
 							KV kv = new KV(Integer.toString(i), ob);
-							links = evaluator.evaluateEmbeddedItem(store.getName(), response, kv);
-							if (links != null)
-								embeddedLinks.add(links);						
+							links.setMap(evaluator.evaluateEmbeddedItem(store.getName(), response, kv));
+							if (links.size() > 0)
+								embeddedLinks.add(links);	
+//							mapify(links);
+
 							i++;
 						}
 					} else {
 						KV kv = new KV("0", items);
-						links = evaluator.evaluateEmbeddedItem(store.getName(), response, kv);
-						if (links != null)
-							embeddedLinks.add(links);						
+						links.setMap(evaluator.evaluateEmbeddedItem(store.getName(), response, kv));
+						if (links.size() > 0)
+							embeddedLinks.add(links);	
+//						mapify(links);
+
 					}
 				}
 			}
-			return itemChunk;
+//			mapify(_embedded);
+			return _embedded;
 		}
 		return null;
 	}
 	
+//	private LinksetMap linkify(
+//			Map<String, Map<String, String>> evaluateEmbeddedItem) {
+//		LinksetMap lsm = new LinksetMap();
+//		lsm.setMap(evaluateEmbeddedItem);
+//		return lsm;
+//	}
+
+	static ObjectMapper mapper = new ObjectMapper();
+
+	void mapify(Map map) {
+		if (map == null)
+			return;
+		byte[] b;
+		try {
+			b = mapper.writeValueAsBytes(map);
+			Map objectAsMap = mapper.readValue(b, Map.class);
+			System.out.println(objectAsMap.toString());
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(1);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(1);
+		}
+
+	}
+
 }

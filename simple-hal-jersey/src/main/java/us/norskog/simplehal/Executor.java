@@ -9,7 +9,7 @@ import javax.el.ValueExpression;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +26,7 @@ public class Executor {
 
 	private final ExpressionFactory factory;
 	private SimpleContext context;
-	Map<String,ValueExpression> valueExprs = new LinkedHashMap<String, ValueExpression>();
+	Map<String,ValueExpression> valueExprs = new HashMap<String, ValueExpression>();
 
 	public Executor() {
 		factory = new de.odysseus.el.ExpressionFactoryImpl();
