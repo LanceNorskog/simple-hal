@@ -29,19 +29,17 @@ public class Builder {
 		return lsm;
 	}
 
-	public Map<String, EmbeddedMap> buildEmbedded(ParsedLinkSet parsedLinkSet,
+	public EmbeddedMap buildEmbedded(ParsedLinkSet parsedLinkSet,
 			Evaluator evaluator, Map<String, Object> response) {
 		if (parsedLinkSet.getEmbeddedMap() != null) {
 			List<ItemStore> storeList = parsedLinkSet.getEmbeddedMap();
-			Map<String, EmbeddedMap> _embedded = new HashMap<String, EmbeddedMap>();
+			EmbeddedMap _embedded = new EmbeddedMap();
 			for(ItemStore store: storeList) {
-				LinksetList embeddedLinks = new LinksetList();
-//				embeddedLinks.setLinksetList(new ArrayList<LinksetMap>());
 				EmbeddedMap _links = new EmbeddedMap();
-				_links.put("_links", embeddedLinks);
-				_embedded.put(store.getName(), _links);
+				LinksetList embeddedLinks = new LinksetList();
+				_embedded.put(store.getName(), embeddedLinks);
 				if (store.getPath() != null) {
-					LinksetMap links = new LinksetMap();
+					LinksetMap linkset = new LinksetMap();
 					Object items = evaluator.evaluateExpr(store.getPath());
 					if (items == null)
 						continue;
@@ -49,42 +47,41 @@ public class Builder {
 						Object[] obs = (Object[]) items;
 						for(int i = 0; i < obs.length; i++) {
 							KV kv = new KV(Integer.toString(i), obs[i]);
-							links.setMap(evaluator.evaluateEmbeddedItem(store.getName(), response, kv));
-							if (links.size() > 0)
-								embeddedLinks.add(links);	
-//							mapify(links);
+							linkset.setMap(evaluator.evaluateEmbeddedItem(store.getName(), response, kv));
+							if (linkset.size() > 0)
+								embeddedLinks.add(linkset);	
+							mapify(linkset);
 						}
 					} else if (items instanceof Map) {
 						for(Object key: ((Map<String,Object>) items).keySet()) {
 							KV kv = new KV(key.toString(), ((Map<?, ?>) items).get(key.toString()));
-							links.setMap(evaluator.evaluateEmbeddedItem(store.getName(), response, kv));
-							if (links.size() > 0)
-								embeddedLinks.add(links);	
-//							mapify(links);
+							linkset.setMap(evaluator.evaluateEmbeddedItem(store.getName(), response, kv));
+							if (linkset.size() > 0)
+								embeddedLinks.add(linkset);	
+							mapify(linkset);
 
 						}
 					} else if (items instanceof Collection) {
 						int i = 0;
 						for(Object ob: (Collection<?>) items) {
 							KV kv = new KV(Integer.toString(i), ob);
-							links.setMap(evaluator.evaluateEmbeddedItem(store.getName(), response, kv));
-							if (links.size() > 0)
-								embeddedLinks.add(links);	
-//							mapify(links);
+							linkset.setMap(evaluator.evaluateEmbeddedItem(store.getName(), response, kv));
+							if (linkset.size() > 0)
+								embeddedLinks.add(linkset);	
+							mapify(linkset);
 
 							i++;
 						}
 					} else {
 						KV kv = new KV("0", items);
-						links.setMap(evaluator.evaluateEmbeddedItem(store.getName(), response, kv));
-						if (links.size() > 0)
-							embeddedLinks.add(links);	
-//						mapify(links);
-
+						linkset.setMap(evaluator.evaluateEmbeddedItem(store.getName(), response, kv));
+						if (linkset.size() > 0)
+							embeddedLinks.add(linkset);	
+						mapify(linkset);
 					}
 				}
 			}
-//			mapify(_embedded);
+			mapify(_embedded);
 			return _embedded;
 		}
 		return null;

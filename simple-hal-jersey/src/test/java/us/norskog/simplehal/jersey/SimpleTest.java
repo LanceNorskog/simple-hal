@@ -140,9 +140,9 @@ public class SimpleTest extends JerseyTest {
 		assertFalse(embeddedHAL.keySet().contains("Arraysious"));
 		assertFalse(embeddedHAL.keySet().contains("Listicle"));
 		//		Collection<Map<String, List<Map<String, Map<String, String>>>>> outer = embeddedHAL.values();
-		for(Map<String, List<Map<String, Map<String, String>>>> outer: embeddedHAL.values()) {
-			for(List<Map<String, Map<String, String>>> inner: outer.values()) {
-				for(Map<String,Map<String, String>> links: inner) {
+		for(List<Map<String, Map<String, Map<String, String>>>> outer: embeddedHAL.values()) {
+			for(Map<String, Map<String, Map<String, String>>> inner: outer) {
+				for(Map<String,Map<String, String>> links: inner.values()) {
 					for(Map<String, String> parts: links.values()) {
 						if (parts.get("rel").equals("first"))
 							assertTrue(false);
@@ -172,7 +172,7 @@ class LinksHAL extends HashMap< String, Map<String, String>> {
 
 }
 
-class EmbeddedHAL extends HashMap<String,Map<String,List<Map<String,Map<String,String>>>>> {
+class EmbeddedHAL extends HashMap<String,List<Map<String,Map<String,Map<String,String>>>>> {
 	static private ObjectMapper mapper = new ObjectMapper();
 
 	static EmbeddedHAL unpack(Map ob) throws IOException {

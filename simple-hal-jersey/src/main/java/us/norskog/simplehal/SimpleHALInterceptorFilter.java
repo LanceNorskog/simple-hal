@@ -75,13 +75,11 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 			Map<String, Object> response = mapifier.convertToMap(entity);
 			LinksetMap builtLinks = builder.buildLinks(parsedLinkSet, evaluator, response);
 			addBaseURI(builtLinks);
-			Map<String, EmbeddedMap> builtEmbedded = builder.buildEmbedded(parsedLinkSet, evaluator, response);
+			EmbeddedMap builtEmbedded = builder.buildEmbedded(parsedLinkSet, evaluator, response);
 			if (builtEmbedded != null) {
-				for( EmbeddedMap em: builtEmbedded.values()) {
-					for(LinksetList embedded: em.values()) {
-						for(LinksetMap ls: embedded) {
-							addBaseURI(ls);
-						}
+				for(LinksetList embedded: builtEmbedded.values()) {
+					for(LinksetMap ls: embedded) {
+						addBaseURI(ls);
 					}
 				}
 			}
@@ -89,6 +87,7 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 			context.setEntity(formatted);
 			context.proceed();
 		} catch (RuntimeException e) {
+			e.printStackTrace();
 			throw e;
 		} finally {
 			baseURIs.set(null);

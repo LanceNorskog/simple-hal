@@ -1,17 +1,19 @@
 package us.norskog.simplehal;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class LinksetList extends ArrayList<LinksetMap> {
-
-	public List lift() {
-		List list = new ArrayList();
-		for(LinksetMap lsmap: this) {
-//			list.add(lsmap.lift());
-		}
-		return list;
-	}
+	
+//	public List lift() {
+//		List list = new ArrayList();
+//		for(LinksetMap lsmap: this) {
+////			list.add(lsmap.lift());
+//		}
+//		return list;
+//	}
 //	List<LinksetMap> linksetList;
 //
 //	public void setLinksetList(List<LinksetMap> linksList) {
