@@ -1,3 +1,4 @@
+//package us.norskog.simplehal;
 ///*
 // * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
 // *

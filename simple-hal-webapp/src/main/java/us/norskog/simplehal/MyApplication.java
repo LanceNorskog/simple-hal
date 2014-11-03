@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.glassfish.jersey.examples.helloworld.webapp;
+package us.norskog.simplehal;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -47,13 +47,13 @@ import java.util.Set;
 /**
  * @author Pavel Bucek (pavel.bucek at oracle.com)
  */
-@ApplicationPath("/helloworld-webapp")
+@ApplicationPath("/webapp")
 public class MyApplication extends Application {
     @Override
     public Set<Class<?>> getClasses() {
         final Set<Class<?>> classes = new HashSet<Class<?>>();
         // register root resource
-        classes.add(HelloWorldResource.class);
+        classes.add(SimpleHALResource.class);
         return classes;
     }
 }

@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.glassfish.jersey.examples.helloworld.webapp;
+package us.norskog.simplehal;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -51,8 +51,16 @@ import us.norskog.simplehal.Link;
 import us.norskog.simplehal.Items;
 
 @Path("simplehal")
-public class HelloWorldResource {
+public class SimpleHALResource {
 	static Value value = null;
+
+	@GET
+    @Produces("text/plain")
+	public Value getString() {
+		if (value == null)
+			value = new Value();
+		return value;
+	}
 
 	@GET
 	@Path("links")

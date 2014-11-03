@@ -41,6 +41,7 @@ package org.glassfish.jersey.examples.helloworld.webapp;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -50,6 +51,7 @@ import org.glassfish.jersey.grizzly2.servlet.GrizzlyWebContainerFactory;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.grizzly.http.server.NetworkListener;
 
 import us.norskog.simplehal._Links;
 
@@ -58,8 +60,8 @@ import us.norskog.simplehal._Links;
  */
 public class App {
 
-    private static final URI BASE_URI = URI.create("http://localhost:8080/webapp/");
-    public static final String ROOT_PATH = "simplehal";
+    private static final URI BASE_URI = URI.create("http://localhost:8080/helloworld-webapp/");
+    public static final String ROOT_PATH = "helloworld";
 
     public static void main(String[] args) {
         try {
@@ -67,9 +69,10 @@ public class App {
 
             Map<String, String> initParams = new HashMap<String, String>();
             initParams.put(
-                    ServerProperties.PROVIDER_PACKAGES+","+_Links.class.getCanonicalName(),
-                    HelloWorldResource.class.getPackage().getName());
+                    ServerProperties.PROVIDER_PACKAGES, // +","+_Links.class.getPackage().toString(),
+                    HelloWorldResource.class.getPackage().getName()+","+"org.glassfish.jersey.jackson");
             final HttpServer server = GrizzlyWebContainerFactory.create(BASE_URI, ServletContainer.class, initParams);
+            Collection<NetworkListener> x = server.getListeners();
 
             System.out.println(String.format("Application started.%nTry out %s%s%nHit enter to stop it...",
                     BASE_URI, ROOT_PATH));
