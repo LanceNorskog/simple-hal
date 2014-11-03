@@ -45,10 +45,12 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 	static Map<ParsedLinkSet, Evaluator> evaluators = new HashMap<ParsedLinkSet, Evaluator>();;
 
 	public SimpleHALInterceptorFilter() {
+		System.out.println("SimpleHalInterceptor()");
 	}
 
 	public void filter(ContainerRequestContext requestContext)
 			throws IOException {
+		System.out.println("SimpleHalInterceptorFilter");
 		URI baseUri = requestContext.getUriInfo().getBaseUri();
 		baseURIs.set(baseUri);
 		List<String> simplehal_json = requestContext.getUriInfo().getQueryParameters().get("simple-hal-json");
@@ -58,6 +60,8 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 	//   @Override
 	public void aroundWriteTo(WriterInterceptorContext context)
 			throws IOException, WebApplicationException {
+		System.out.println("SimpleHalInterceptorWriteTo");
+
 		try {
 			Object entity = context.getEntity();
 			Boolean boolean1 = doAlls.get();

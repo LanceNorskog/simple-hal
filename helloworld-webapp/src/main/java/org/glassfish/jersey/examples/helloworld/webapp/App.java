@@ -69,8 +69,8 @@ public class App {
 
             Map<String, String> initParams = new HashMap<String, String>();
             initParams.put(
-                    ServerProperties.PROVIDER_PACKAGES, // +","+_Links.class.getPackage().toString(),
-                    HelloWorldResource.class.getPackage().getName()+","+"org.glassfish.jersey.jackson");
+                    ServerProperties.PROVIDER_PACKAGES,
+                    HelloWorldResource.class.getPackage().getName()+","+"org.glassfish.jersey.jackson"+","+"us.norskog.simplehal");
             final HttpServer server = GrizzlyWebContainerFactory.create(BASE_URI, ServletContainer.class, initParams);
             Collection<NetworkListener> x = server.getListeners();
 
