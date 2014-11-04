@@ -1,23 +1,15 @@
-package us.norskog.simplehal;
+package us.norskog.simplehal.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Formatter for IETF draft format.
+ *
+ */
 public class SimpleFormatter implements Formatter {
-
-	//	public Map<String, Object> format(
-	//			Map<String, Object> response,
-	//			Map<String, Map<String, String>> builtLinks,
-	//			Map<String, Map<String, List<Map<String, Map<String, String>>>>> builtEmbedded) {
-	//		Map<String, Object> formatted = new HashMap<String, Object>();
-	//		formatted.put("_links", builtLinks);
-	//		
-	//		if (builtEmbedded != null) 
-	//			formatted.put("_embedded", builtEmbedded);
-	//		return formatted;
-	//	}
 
 	public Map<String, Object> format(Map<String, Object> response,
 			LinksetMap builtLinks, EmbeddedMap builtEmbedded) {

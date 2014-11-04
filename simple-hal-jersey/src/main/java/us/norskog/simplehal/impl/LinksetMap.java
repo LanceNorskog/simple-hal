@@ -1,4 +1,4 @@
-package us.norskog.simplehal;
+package us.norskog.simplehal.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;

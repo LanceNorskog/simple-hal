@@ -5,7 +5,8 @@ package us.norskog.simplehal;
  * Return set of links for each member of a collection in the response object.
  * 'items' expression provides a value or sequence of values.
  * A set of links is created with each item visible to the link value expressions.
- * 'check' expression decides whether to include this block.
+ * EL expressions inside the @Link annotations can refer to item.key and item.value
+ * which are the n'th position and value for the collection fetched by the items() EL.
  */
 
 public @interface Items {

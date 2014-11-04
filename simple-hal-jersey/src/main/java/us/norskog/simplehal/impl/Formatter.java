@@ -1,10 +1,11 @@
-package us.norskog.simplehal;
+package us.norskog.simplehal.impl;
 
-import java.util.List;
 import java.util.Map;
 
 /**
  * Format an evaluated Map tree into hyperlink format.
+ * 
+ * Factored out to allow different formats: Spring, HAL library, whatever.
  * 
  * @author lance
  *

@@ -1,4 +1,4 @@
-package us.norskog.simplehal;
+package us.norskog.simplehal.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -103,7 +103,6 @@ public class Builder {
 		try {
 			b = mapper.writeValueAsBytes(map);
 			Map objectAsMap = mapper.readValue(b, Map.class);
-			System.out.println(objectAsMap.toString());
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -116,4 +115,28 @@ public class Builder {
 
 	}
 
+}
+
+// item.key, item.value
+class KV {
+	private String key;
+	private Object value;
+
+	KV(String key, Object value) {
+		this.key = key;
+		this.value = value;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public Object getValue() {
+		return value;
+	}
+	
+	@Override
+	public String toString() {
+		return "[key="+key.toString() + ",value="+value.toString()+"]";
+	}
 }

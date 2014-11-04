@@ -1,18 +1,14 @@
-package us.norskog.simplehal.jersey;
+package us.norskog.simplehal.impl;
 
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
@@ -22,7 +18,7 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import us.norskog.simplehal.SimpleHALInterceptorFilter;
+import us.norskog.simplehal.impl.SimpleHALInterceptorFilter;
 
 /**
  * Start Jersey app at 9998.
@@ -53,7 +49,7 @@ public class SimpleTest extends JerseyTest {
 	public void nullTest() {
 		HelloWorldResource.setValue(new Value());
 		Builder request = target("helloworld/links").request("application/json");
-		final Map unpacked = request.get(Map.class);
+		final Map<String,Object> unpacked = request.get(Map.class);
 		assertNull(unpacked.get("_links"));
 		assertNull(unpacked.get("_embedded"));
 	}
@@ -62,7 +58,7 @@ public class SimpleTest extends JerseyTest {
 	public void smokeTest() {
 		HelloWorldResource.setValue(new Value());
 		Builder request = target("helloworld/links").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
-		final Map unpacked = request.get(Map.class);
+		final Map<String,Object> unpacked = request.get(Map.class);
 		assertNotNull(unpacked.get("_links"));
 		Object object = unpacked.get("_embedded");
 		assertNull(object);
@@ -72,9 +68,8 @@ public class SimpleTest extends JerseyTest {
 	public void linksTest() throws IOException {
 		HelloWorldResource.setValue(new Value());
 		Builder request = target("helloworld/links").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
-		final Map<String,Map> unpacked = request.get(Map.class);
-		Map links = unpacked.get("_links");
-		printJson(links);
+		final Map<String,Object> unpacked = request.get(Map.class);
+		Map<String,Object> links = (Map<String, Object>) unpacked.get("_links");
 	}
 
 	@Test
@@ -83,33 +78,19 @@ public class SimpleTest extends JerseyTest {
 		Builder request = target("helloworld/embedded").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
 		final Map unpacked = request.get(Map.class);
 		//		printJson(unpacked);
-		Map embedded = (Map) unpacked.get("_embedded");
-		printJson(embedded);
-		System.out.println(embedded.toString());
+		Map<String,Object> embedded = (Map) unpacked.get("_embedded");
 		EmbeddedHAL embeddedHAL = EmbeddedHAL.unpack(embedded);
-		embedded.hashCode();
-		//		for(List<List<Map<String,String>>> outer: embeddedHAL.values()) {
-		//			for(List<Map<String, String>> inner: outer) {
-		//				for(Map<String, String> links: inner) {
-		//					if (links.containsKey("rel"))
-		//						return;
-		//				}
-		//			}
-		//		}
-		//		assertTrue(false);
-	}
-
-	private void printJson(Map unpacked) {
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			byte[] b = mapper.writeValueAsBytes(unpacked);
-			System.out.println( new String(b));
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		for(List<Map<String, Map<String, Map<String, String>>>> outer: embeddedHAL.values()) {
+			for(Map<String, Map<String, Map<String, String>>> inner: outer) {
+				for(Map<String,Map<String, String>> links: inner.values()) {
+					for(Map<String, String> parts: links.values()) {
+						if (parts.containsKey("href"))
+							return;
+					}
+				}
+			}
 		}
-
-
+		assertTrue(false);
 	}
 
 	@Test
@@ -118,8 +99,8 @@ public class SimpleTest extends JerseyTest {
 		HelloWorldResource.setValue(local);
 		local.setDoFirst(false);
 		Builder request = target("helloworld/check").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
-		final Map<String,Map> unpacked = request.get(Map.class);
-		Map linkSet = unpacked.get("_links");
+		final Map<String,Object> unpacked = request.get(Map.class);
+		Map<String,Object> linkSet = (Map<String, Object>) unpacked.get("_links");
 		LinksHAL linksHal = LinksHAL.unpack(linkSet);
 		assertFalse(linksHal.keySet().contains("first"));
 	}
@@ -134,24 +115,33 @@ public class SimpleTest extends JerseyTest {
 		local.setDoMap(true);
 		Builder request = target("helloworld/check").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
 		final Map<String,Object> unpacked = request.get(Map.class);
-		Map embedded = (Map) unpacked.get("_embedded");
+		Map<String,Object> embedded = (Map<String, Object>) unpacked.get("_embedded");
 		EmbeddedHAL embeddedHAL = EmbeddedHAL.unpack(embedded);
-		assertTrue(embeddedHAL.keySet().contains("Mappacious"));
-		assertFalse(embeddedHAL.keySet().contains("Arraysious"));
-		assertFalse(embeddedHAL.keySet().contains("Listicle"));
-		//		Collection<Map<String, List<Map<String, Map<String, String>>>>> outer = embeddedHAL.values();
+		assertTrue(embeddedHAL.get("Mappacious").size() > 0);
+		assertFalse(embeddedHAL.get("Arraysious").size() > 0);
+		assertFalse(embeddedHAL.get("Listicle").size() > 0);
 		for(List<Map<String, Map<String, Map<String, String>>>> outer: embeddedHAL.values()) {
 			for(Map<String, Map<String, Map<String, String>>> inner: outer) {
 				for(Map<String,Map<String, String>> links: inner.values()) {
-					for(Map<String, String> parts: links.values()) {
-						if (parts.get("rel").equals("first"))
-							assertTrue(false);
-					}
+					if (links.containsKey("first"))
+						assertTrue(false);
 				}
 			}
-			hashCode();
 		}
 	}
+
+	// verify that created object is valid json.
+	private void printJson(Map unpacked) {
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			byte[] b = mapper.writeValueAsBytes(unpacked);
+			System.out.println( new String(b));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 }
 
 // secret classes to help me track the trees.
@@ -164,7 +154,6 @@ class LinksHAL extends HashMap< String, Map<String, String>> {
 		byte[] b;
 
 		b = mapper.writeValueAsBytes(ob);
-		Map x = mapper.readValue(b, Map.class);
 		out = mapper.readValue(b, LinksHAL.class);
 
 		return out;
@@ -177,8 +166,8 @@ class EmbeddedHAL extends HashMap<String,List<Map<String,Map<String,Map<String,S
 
 	static EmbeddedHAL unpack(Map ob) throws IOException {
 		Map<String,Object> ob2 = ob;
-		for(String key: ob2.keySet())
-			System.out.println("_embedded: " + key);
+//		for(String key: ob2.keySet())
+//			System.out.println("_embedded: " + key);
 		EmbeddedHAL out = null;
 		byte[] b;
 

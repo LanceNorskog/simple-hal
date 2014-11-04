@@ -1,4 +1,4 @@
-package us.norskog.simplehal;
+package us.norskog.simplehal.impl;
 
 import de.odysseus.el.util.SimpleContext;
 import de.odysseus.el.util.SimpleResolver;
@@ -69,6 +69,7 @@ public class Executor {
 		return raw;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Object> getList(String selector) {
 		Object raw = eval(selector);
 		if (raw instanceof List)
@@ -82,23 +83,11 @@ public class Executor {
 			return list;
 		}
 		if (raw instanceof Collection) {
-			List<Object> list = new ArrayList<Object>((Collection) raw);
+			List<Object> list = new ArrayList<Object>((Collection<Object>) raw);
 			return list;
 		}
 
 		return Collections.emptyList();
 	}
 
-//	public List<String> expandList(String selector, List<Object> itemList, String expr) {
-//		List<Object> embedded = new ArrayList<String>();
-//		if (itemList.size() == 0)
-//			return embedded;
-//		ValueExpression itemValueExpr = valueExprs.get(selector);
-//		for(Object item: itemList) {
-//			itemValueExpr.setValue(context, item);
-//			String embed = evalExpr(expr);
-//			embedded.add(embed);
-//		}
-//		return embedded;
-//	}
 }

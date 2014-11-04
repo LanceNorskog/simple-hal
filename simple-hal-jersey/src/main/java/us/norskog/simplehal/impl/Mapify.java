@@ -1,4 +1,4 @@
-package us.norskog.simplehal;
+package us.norskog.simplehal.impl;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -16,25 +16,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Mapify {
 	private static final Map<String,Object> mapclass = new HashMap<String, Object>();
-	// not sure if ThreadLocal needed. Have had weird probs with sharing Jackson in the past.
+	// It takes 1-2 ms to create an ObjectMapper
 	private static ThreadLocal<ObjectMapper> mappers = new ThreadLocal<ObjectMapper>();
 
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> convertToMap(Object obj) {	
 		Map<String, Object> objectAsMap;
-		long start = System.currentTimeMillis();
 		try {
 			byte[] b;
 			if (mappers.get() == null)
 				mappers.set(new ObjectMapper());
 			b = mappers.get().writeValueAsBytes(obj);
-			objectAsMap = mappers.get().readValue(b, mapclass.getClass());
+			objectAsMap = (Map<String,Object>) mappers.get().readValue(b, mapclass.getClass());
 			return objectAsMap;
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}

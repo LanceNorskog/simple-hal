@@ -1,7 +1,6 @@
-package us.norskog.simplehal;
+package us.norskog.simplehal.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,7 @@ import java.util.Map;
  */
 
 public class Evaluator {
-	private static String TRUE = "true";
+	private static String TRUE = "true"; // default for all check expressions
 	Executor executor = new Executor();
 
 	private evLinkSet evLinkSet = null;
@@ -47,10 +46,10 @@ public class Evaluator {
 				}
 				link.parts.put(part, expressions);
 			}
-//			if (! store.getCheck().equals(TRUE)) {
+			if (! store.getCheck().equals(TRUE)) {
 				Parser p = new Parser(store.getCheck());
 				link.check = p.expressions;
-//			}
+			}
 			parsed.evLinks.add(link);
 		}
 		return parsed;

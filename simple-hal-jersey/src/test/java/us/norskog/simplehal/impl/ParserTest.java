@@ -1,11 +1,11 @@
-package us.norskog.simplehal;
+package us.norskog.simplehal.impl;
 
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import us.norskog.simplehal.Expression;
-import us.norskog.simplehal.Parser;
+import us.norskog.simplehal.impl.Expression;
+import us.norskog.simplehal.impl.Parser;
 
 import java.util.ArrayList;
 import java.util.HashMap;

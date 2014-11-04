@@ -1,4 +1,4 @@
-package us.norskog.simplehal;
+package us.norskog.simplehal.impl;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -7,13 +7,15 @@ import javax.ws.rs.ext.Provider;
 import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 
+import us.norskog.simplehal.Items;
+import us.norskog.simplehal.Link;
+import us.norskog.simplehal.LinkSet;
+import us.norskog.simplehal._Embedded;
+import us.norskog.simplehal._Links;
+
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +30,6 @@ import java.util.Map;
  * Interceptor on the outgo because only Interceptors get the data.
  * Oy!
  * 
- * TODO: method must have an @GET or @HEAD
  */
 
 @Provider
@@ -38,33 +39,26 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 	public static final String HAL = "application/hal+json";
 
 	static ThreadLocal<URI> baseURIs = new ThreadLocal<URI>(); 
-	static ThreadLocal<Boolean> doAlls = new ThreadLocal<Boolean>(); 
 	static Mapify mapifier = new Mapify();
 	static Builder builder = new Builder();
 	static Formatter formatter = new SimpleFormatter();
 	static Map<ParsedLinkSet, Evaluator> evaluators = new HashMap<ParsedLinkSet, Evaluator>();;
 
 	public SimpleHALInterceptorFilter() {
-		System.out.println("SimpleHalInterceptor()");
 	}
 
 	public void filter(ContainerRequestContext requestContext)
 			throws IOException {
-		System.out.println("SimpleHalInterceptorFilter");
 		URI baseUri = requestContext.getUriInfo().getBaseUri();
 		baseURIs.set(baseUri);
-		List<String> simplehal_json = requestContext.getUriInfo().getQueryParameters().get("simple-hal-json");
-		doAlls.set(simplehal_json != null && simplehal_json.size() > 0 && simplehal_json.get(0).equals("true"));
 	}
 
 	//   @Override
 	public void aroundWriteTo(WriterInterceptorContext context)
 			throws IOException, WebApplicationException {
-		System.out.println("SimpleHalInterceptorWriteTo");
 
 		try {
 			Object entity = context.getEntity();
-			Boolean boolean1 = doAlls.get();
 			if (!context.getMediaType().toString().equals(HAL) || entity == null) {
 				context.proceed();
 				return;
@@ -96,11 +90,6 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 		} finally {
 			baseURIs.set(null);
 		}
-	}
-
-	private Object mapify(Map<String, Object> formatted) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	private void addBaseURI(LinksetMap builtLinks) {

@@ -1,13 +1,18 @@
-package us.norskog.simplehal;
+package us.norskog.simplehal.impl;
 
 import java.lang.annotation.Annotation;
-import java.lang.annotation.AnnotationFormatError;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import us.norskog.simplehal.Items;
+import us.norskog.simplehal.Link;
+import us.norskog.simplehal.LinkSet;
+import us.norskog.simplehal._Embedded;
+import us.norskog.simplehal._Links;
 
 /*
  * Unpack Links/Link/Embedded annotation structure
@@ -55,7 +60,7 @@ public class ParsedLinkSet {
 		List<LinkStore> links = new ArrayList<LinkStore>(); 
 		for(Link link: linkset.links()) {
 			LinkStore store = new LinkStore(link.rel(), link.title(), link.href());
-			if (! link.check().equals("true"))
+			if (! link.check().equals("${true}"))
 				store.setCheck(link.check());
 			Object[] moreOb = link.more();
 			if (moreOb.length > 0) {
@@ -135,7 +140,7 @@ public class ParsedLinkSet {
 		}
 	}
 
-	private static Annotation getAnno(Annotation[] annos, Class annoClass) {
+	private static Annotation getAnno(Annotation[] annos, Class<? extends Annotation> annoClass) {
 		for(Annotation anno: annos) {
 			if (anno.annotationType().equals(annoClass)) {
 				return anno;

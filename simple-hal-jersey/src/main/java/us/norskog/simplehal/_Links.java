@@ -6,6 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Top-level container for Link annotations.
+ * 
  * Specify HAL hyperlinks to add to your endpoint's return value.
  * endpoint must return a structure, map<String,Object>, array,
  * or JSON in a string.

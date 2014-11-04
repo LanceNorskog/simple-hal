@@ -1,10 +1,8 @@
-package us.norskog.simplehal;
+package us.norskog.simplehal.impl;
 
 /**
  * Expression: evaluatable expression or simple string.
  */
-
-
 
 class Expression {
     final private String expr;

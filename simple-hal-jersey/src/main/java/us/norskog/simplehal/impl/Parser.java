@@ -1,4 +1,4 @@
-package us.norskog.simplehal;
+package us.norskog.simplehal.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,6 @@ public class Parser {
       // build list of parts that are either Strings or Expressions
         // need inside/outside boolean to decide which.
         boolean el = false;
-        boolean doEl = false;
         for(int i = 0; i < spec.length(); i++) {
             char ch = spec.charAt(i);
             if (el) {
@@ -44,7 +43,6 @@ public class Parser {
                     }
                     sb.append("${");
                     el = true;
-                    doEl = true;
                 } else if (ch == '{' || ch == '}') {
                 	expressions.add(new Expression("#NULL", false));
                 	return;
