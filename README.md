@@ -110,3 +110,4 @@ need request as well as response objects?
 Collapse attributes- change @LinkSet to just array of links
 Embedded- try embedded2, embedded3 etc.
 No need for check? The first-next links will want it
+DTO objects are nonsense because they don't have _links or _embedded! if client tries to use them it'll blow up.
