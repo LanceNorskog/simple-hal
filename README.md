@@ -104,3 +104,9 @@ https://tools.ietf.org/html/draft-kelly-json-hal-06
 The examples in this draft allow the HAL blocks to contain information that is not in the outer blocks. 
 A basic premise of Simple-HAL is that the HAL blocks are add-ons to the base Json object. 
 They only contain generated links, no original data.
+-----------
+Experiment with annotating RentTheRunway Alchemy API:
+need request as well as response objects?
+Collapse attributes- change @LinkSet to just array of links
+Embedded- try embedded2, embedded3 etc.
+No need for check? The first-next links will want it
