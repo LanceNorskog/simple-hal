@@ -1,5 +1,6 @@
 package us.norskog.simplehal.impl;
 
+import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -14,6 +15,7 @@ import us.norskog.simplehal._Embedded;
 import us.norskog.simplehal._Links;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,7 +73,7 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 
 			Evaluator evaluator = init(parsedLinkSet);
 			Map<String, Object> response = mapifier.convertToMap(entity);
-			String path = getPath();
+			String path = getPath(context.getAnnotations());
 			LinksetMap builtLinks = builder.buildLinks(parsedLinkSet, evaluator, path, response);
 			EmbeddedMap builtEmbedded = builder.buildEmbedded(parsedLinkSet, evaluator, path, response);
 			Map<String, Object> formatted = formatter.format(response, builtLinks, builtEmbedded);
@@ -85,9 +87,22 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 		}
 	}
 
-	 String getPath() {
+	// path of class, not method
+	 String getPath(Annotation[] annos) {
+		String part = "";
+		for(Annotation anno: annos) {
+			if (anno instanceof Path)
+				part = ((Path) anno).value();
+		}
+		System.out.println("getPath: part: " + part.toString());
 		String path = baseURIs.get().getPath();
-		System.out.println("URI, path: " + baseURIs.get().toString() + path);
+		System.out.println("\tURI, path: " + baseURIs.get().getAbsolutePath().toString() + ", " + path);
+		path = path.substring(0, path.length() - part.length());
+		if (path.endsWith("/"))
+			path = path.substring(0, path.length() - 1);
+		if (! path.startsWith("/"))
+			path = "/" + path;
+		System.out.println("\t${path}: " + path);
 		return path;
 	}
 

@@ -43,7 +43,14 @@ public class SimpleTest extends JerseyTest {
 	}
 
 	@Test
+	public void noTest() {
+		assertTrue(true);
+		System.out.println("noTest");
+	}
+
+	@Test
 	public void topTest() {
+		System.out.println("topTest");
 		HelloWorldResource.setValue(new Value());
 		Builder request = target("helloworld").request("text/plain");
 		String response = request.get(String.class);
@@ -55,6 +62,7 @@ public class SimpleTest extends JerseyTest {
 	 */
 	@Test
 	public void nullTest() {
+		System.out.println("nullTest");
 		HelloWorldResource.setValue(new Value());
 		Builder request = target("helloworld/links").request("application/json");
 		final Map<String,Object> unpacked = request.get(Map.class);
@@ -73,7 +81,7 @@ public class SimpleTest extends JerseyTest {
 	}
 
 	@Test
-	public void linksTest() throws IOException {
+	public void pathTest() throws IOException {
 		HelloWorldResource.setValue(new Value());
 		Builder request = target("helloworld/links").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
 		final Map<String,Object> unpacked = request.get(Map.class);
@@ -82,8 +90,20 @@ public class SimpleTest extends JerseyTest {
 		LinksHAL linksHal = LinksHAL.unpack(linkSet);
 		String url = linksHal.get("self").get("href");
 		System.out.println(url);
-		assertFalse(url.startsWith("helloworld"));
+		assertTrue(url.equals("/helloworld/links"));
 		assertFalse(url.contains("localhost"));
+	}
+
+	@Test
+	public void linksTest() throws IOException {
+		HelloWorldResource.setValue(new Value());
+		Builder request = target("helloworld/links").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
+		final Map<String,Object> unpacked = request.get(Map.class);
+		Map links = (Map) unpacked.get("_links");
+		Map<String,Object> linkSet = (Map<String, Object>) unpacked.get("_links");
+		LinksHAL linksHal = LinksHAL.unpack(linkSet);
+		String url = linksHal.get("self").get("href");
+		assertNotNull(url);
 	}
 
 	@Test
