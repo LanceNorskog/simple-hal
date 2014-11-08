@@ -24,7 +24,6 @@ import java.lang.annotation.RetentionPolicy;
  *     It should probably be run under a separate classloader with a sandbox SecurityManager.
  */
 
-// @Target(ElementType.ANNOTATION_TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Link {
 	/**

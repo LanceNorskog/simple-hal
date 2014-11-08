@@ -9,7 +9,6 @@ import java.lang.annotation.RetentionPolicy;
  *
  */
 
-// @Target({ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LinkSet {
 	/**

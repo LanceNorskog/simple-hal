@@ -1,5 +1,8 @@
 package us.norskog.simplehal;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
+
 /**
  * 
  * Return set of links for each member of a collection in the response object.
@@ -9,6 +12,7 @@ package us.norskog.simplehal;
  * which are the n'th position and value for the collection fetched by the items() EL.
  */
 
+@Target(ElementType.METHOD)
 public @interface Items {
 	/**
 	 * Name of embedded block

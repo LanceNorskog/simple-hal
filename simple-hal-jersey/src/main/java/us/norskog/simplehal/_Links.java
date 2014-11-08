@@ -20,4 +20,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface _Links {
 	LinkSet linkset();
+	String doc() default "";
 }
