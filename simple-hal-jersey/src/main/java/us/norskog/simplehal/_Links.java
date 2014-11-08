@@ -19,6 +19,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface _Links {
-	LinkSet linkset();
+	Link[] links();
 	String doc() default "";
 }

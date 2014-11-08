@@ -14,8 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Implement EL actions for response and item.
- * First get EL interface right, then refine to getX bean stuff only.
+ * Implement EL actions for path, response and item.
  * Object is hard-created to eval one string.
  * User must create its own map of objects.
  *

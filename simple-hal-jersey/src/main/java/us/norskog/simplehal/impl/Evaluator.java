@@ -60,21 +60,22 @@ public class Evaluator {
 		return ob;
 	}
 	
-	public Map<String, Map<String, String>> evaluateLinks(Object response) {
+	public Map<String, Map<String, String>> evaluateLinks(String path, Object response) {
 		if (evLinkSet == null)
 			return null;
-		Map<String, Map<String, String>> linkSet = getLinks(response, null, evLinkSet);
+		Map<String, Map<String, String>> linkSet = getLinks(path, response, null, evLinkSet);
 		return linkSet;
 	}	
 	
-	public Map<String, Map<String, String>> evaluateEmbeddedItem(String name, Object response, Object item) {
+	public Map<String, Map<String, String>> evaluateEmbeddedItem(String name, String path, Object response, Object item) {
 		if (evLinkSet == null || evEmbeddedSet == null)
 			return null;
-		return getLinks(response, item, evEmbeddedSet.evEmbedded.get(name).evLinkSet);
+		return getLinks(path, response, item, evEmbeddedSet.evEmbedded.get(name).evLinkSet);
 	}
 
-	private Map<String,Map<String, String>> getLinks(Object response, Object item, 
+	private Map<String,Map<String, String>> getLinks(String path, Object response, Object item, 
 			evLinkSet evLinkSet) {
+		executor.setVar("path", path);
 		executor.setVar("response", response);
 		if (item != null)
 			executor.setVar("item", item);

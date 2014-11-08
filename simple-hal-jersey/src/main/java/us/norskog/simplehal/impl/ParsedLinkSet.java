@@ -10,7 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import us.norskog.simplehal.Items;
 import us.norskog.simplehal.Link;
-import us.norskog.simplehal.LinkSet;
 import us.norskog.simplehal._Embedded;
 import us.norskog.simplehal._Links;
 
@@ -34,8 +33,8 @@ public class ParsedLinkSet {
 		_Links _linksAnno = (_Links) getAnno(annos, _Links.class);
 		_Embedded _embeddedAnno = (_Embedded) getAnno(annos, _Embedded.class);
 		if (_linksAnno != null) {
-			LinkSet linkset = _linksAnno.linkset();
-			links = storeLinks(linkset);
+			Link[] linkSpecs = _linksAnno.links();
+			links = storeLinks(linkSpecs);
 		}
 		if (_embeddedAnno != null) {
 			Items[] items = _embeddedAnno.value();
@@ -56,9 +55,9 @@ public class ParsedLinkSet {
 		return store;
 	}
 
-	private List<LinkStore> storeLinks(LinkSet linkset) {
+	private List<LinkStore> storeLinks(Link[] linkset) {
 		List<LinkStore> links = new ArrayList<LinkStore>(); 
-		for(Link link: linkset.links()) {
+		for(Link link: linkset) {
 			LinkStore store = new LinkStore(link.rel(), link.title(), link.href());
 			if (! link.check().equals("${true}"))
 				store.setCheck(link.check());

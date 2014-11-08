@@ -3,13 +3,13 @@ package us.norskog.simplehal.impl;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 
 import us.norskog.simplehal.Items;
 import us.norskog.simplehal.Link;
-import us.norskog.simplehal.LinkSet;
 import us.norskog.simplehal._Embedded;
 import us.norskog.simplehal._Links;
 
@@ -33,12 +33,12 @@ import java.util.Map;
  */
 
 @Provider
-@_Links(linkset = @LinkSet(links = { @Link(href = "", rel = "") }))
-@_Embedded(value = { @Items(items = "", links = @LinkSet(links = { @Link(href = "", rel = "") }), name = "") })
+@_Links(links = { @Link(href = "", rel = "") })
+@_Embedded(value = { @Items(items = "", links = { @Link(href = "", rel = "") }, name = "") })
 public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerRequestFilter {
 	public static final String HAL = "application/hal+json";
 
-	static ThreadLocal<URI> baseURIs = new ThreadLocal<URI>(); 
+	static ThreadLocal<UriInfo> baseURIs = new ThreadLocal<UriInfo>(); 
 	static Mapify mapifier = new Mapify();
 	static Builder builder = new Builder();
 	static Formatter formatter = new SimpleFormatter();
@@ -49,7 +49,7 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 
 	public void filter(ContainerRequestContext requestContext)
 			throws IOException {
-		URI baseUri = requestContext.getUriInfo().getBaseUri();
+		UriInfo baseUri = requestContext.getUriInfo();
 		baseURIs.set(baseUri);
 	}
 
@@ -71,16 +71,9 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 
 			Evaluator evaluator = init(parsedLinkSet);
 			Map<String, Object> response = mapifier.convertToMap(entity);
-			LinksetMap builtLinks = builder.buildLinks(parsedLinkSet, evaluator, response);
-			addBaseURI(builtLinks);
-			EmbeddedMap builtEmbedded = builder.buildEmbedded(parsedLinkSet, evaluator, response);
-			if (builtEmbedded != null) {
-				for(LinksetList embedded: builtEmbedded.values()) {
-					for(LinksetMap ls: embedded) {
-						addBaseURI(ls);
-					}
-				}
-			}
+			String path = getPath();
+			LinksetMap builtLinks = builder.buildLinks(parsedLinkSet, evaluator, path, response);
+			EmbeddedMap builtEmbedded = builder.buildEmbedded(parsedLinkSet, evaluator, path, response);
 			Map<String, Object> formatted = formatter.format(response, builtLinks, builtEmbedded);
 			context.setEntity(formatted);
 			context.proceed();
@@ -92,24 +85,10 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 		}
 	}
 
-	private void addBaseURI(LinksetMap builtLinks) {
-		String baseURI = getBaseURI();
-		for(String key: builtLinks.keySet()) {
-			LinkPartsMap linkMap = builtLinks.get(key);
-			String href = linkMap.get("href");
-			if (href != null) {
-				if (href.startsWith("/"))
-					href = href.substring(1);
-				linkMap.put("href", baseURI + "/" + href);
-			}
-		}
-	}
-
-	private String getBaseURI() {
-		String baseURI = baseURIs.get().toString();
-		if (baseURI.endsWith("/"))
-			baseURI = baseURI.substring(0, baseURI.length() - 1);
-		return baseURI;
+	 String getPath() {
+		String path = baseURIs.get().getPath();
+		System.out.println("URI, path: " + baseURIs.get().toString() + path);
+		return path;
 	}
 
 	private Evaluator init(ParsedLinkSet parsedLinkSet) {

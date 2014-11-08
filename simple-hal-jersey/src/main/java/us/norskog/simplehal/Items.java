@@ -28,5 +28,5 @@ public @interface Items {
 	/**
 	 * Individual links generated from all items returned by expression
 	 */
-	LinkSet links();
+	Link[] links();
 }

@@ -4,12 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 
- * Store terms in a link after EL evaluation
- *
+ * _links: ["name":{...
  */
 
 @SuppressWarnings("serial")
 public class LinkPartsMap extends HashMap<String,String>{
 
+	public LinkPartsMap() {;}
+	public LinkPartsMap(Map<String,String> map) {
+		for(String key: map.keySet())
+			this.put(key, map.get(key));
+	}
 }

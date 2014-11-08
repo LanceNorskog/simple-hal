@@ -42,6 +42,14 @@ public class SimpleTest extends JerseyTest {
 		return resource;
 	}
 
+	@Test
+	public void topTest() {
+		HelloWorldResource.setValue(new Value());
+		Builder request = target("helloworld").request("text/plain");
+		String response = request.get(String.class);
+		assertTrue(response.startsWith("SimpleHAL"));
+	}
+
 	/*	
     For some seekrit reason, this is totally buggered in the jersey test harness. Like, totally.
 	 */
@@ -69,7 +77,13 @@ public class SimpleTest extends JerseyTest {
 		HelloWorldResource.setValue(new Value());
 		Builder request = target("helloworld/links").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
 		final Map<String,Object> unpacked = request.get(Map.class);
-		Map<String,Object> links = (Map<String, Object>) unpacked.get("_links");
+		Map links = (Map) unpacked.get("_links");
+		Map<String,Object> linkSet = (Map<String, Object>) unpacked.get("_links");
+		LinksHAL linksHal = LinksHAL.unpack(linkSet);
+		String url = linksHal.get("self").get("href");
+		System.out.println(url);
+		assertFalse(url.startsWith("helloworld"));
+		assertFalse(url.contains("localhost"));
 	}
 
 	@Test
