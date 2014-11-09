@@ -1,6 +1,7 @@
 package us.norskog.simplehal.impl;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,11 @@ public class Mapify {
 	private static ThreadLocal<ObjectMapper> mappers = new ThreadLocal<ObjectMapper>();
 
 	@SuppressWarnings("unchecked")
-	public Map<String, Object> convertToMap(Object obj) {	
+	public Map<String, Object> convertToMap(Object obj) {
+		if (obj instanceof Number || obj instanceof String)
+			return null;
+		if (obj instanceof Collection<?> || obj.getClass().isArray())
+			return null;
 		Map<String, Object> objectAsMap;
 		try {
 			byte[] b;

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.Application;
 
@@ -55,6 +56,15 @@ public class SimpleTest extends JerseyTest {
 		Builder request = target("helloworld").request("text/plain");
 		String response = request.get(String.class);
 		assertTrue(response.startsWith("SimpleHAL"));
+	}
+
+	@Test(expected=WebApplicationException.class)
+	public void arrayTest() {
+		System.out.println("arrayTest");
+		HelloWorldResource.setValue(new Value());
+		Builder request = target("helloworld/array").request(SimpleHALInterceptorFilter.HAL);
+		String response = request.get(String.class);
+		assertFalse(true);
 	}
 
 	/*	

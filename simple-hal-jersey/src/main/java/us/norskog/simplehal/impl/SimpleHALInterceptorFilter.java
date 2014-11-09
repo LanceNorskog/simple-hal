@@ -4,6 +4,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 import javax.ws.rs.ext.WriterInterceptor;
@@ -73,6 +74,9 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 
 			Evaluator evaluator = init(parsedLinkSet);
 			Map<String, Object> response = mapifier.convertToMap(entity);
+			if (response == null) {
+				throw new WebApplicationException("SimpleHAL: response class must be POJO or Map, not " + entity.getClass().getCanonicalName());
+			}
 			String path = getPath(context.getAnnotations());
 			LinksetMap builtLinks = builder.buildLinks(parsedLinkSet, evaluator, path, response);
 			EmbeddedMap builtEmbedded = builder.buildEmbedded(parsedLinkSet, evaluator, path, response);
@@ -94,15 +98,12 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 			if (anno instanceof Path)
 				part = ((Path) anno).value();
 		}
-		System.out.println("getPath: part: " + part.toString());
 		String path = baseURIs.get().getPath();
-		System.out.println("\tURI, path: " + baseURIs.get().getAbsolutePath().toString() + ", " + path);
 		path = path.substring(0, path.length() - part.length());
 		if (path.endsWith("/"))
 			path = path.substring(0, path.length() - 1);
 		if (! path.startsWith("/"))
 			path = "/" + path;
-		System.out.println("\t${path}: " + path);
 		return path;
 	}
 

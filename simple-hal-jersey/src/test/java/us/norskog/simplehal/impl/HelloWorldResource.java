@@ -60,6 +60,13 @@ public class HelloWorldResource {
 	}
 
 	@GET
+	@Path("array")
+    @Produces("text/plain")
+	public String[] getStringArray() {
+		return new String[] {"SimpleHAL is raddddd"};
+	}
+
+	@GET
 	@Path("links")
 	@_Links(links = {
 			@Link(rel = "self", href = "${path}/links", title = "Self"),
