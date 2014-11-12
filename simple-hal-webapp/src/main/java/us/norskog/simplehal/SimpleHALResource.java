@@ -46,11 +46,10 @@ import javax.ws.rs.core.MediaType;
 
 import us.norskog.simplehal._Embedded;
 import us.norskog.simplehal._Links;
-import us.norskog.simplehal.LinkSet;
 import us.norskog.simplehal.Link;
 import us.norskog.simplehal.Items;
 
-@Path("simplehal")
+@Path("/simplehal")
 public class SimpleHALResource {
 	static Value value = null;
 
@@ -63,10 +62,10 @@ public class SimpleHALResource {
 	}
 
 	@GET
-	@Path("links")
-	@_Links(linkset = @LinkSet(links = {
+	@Path("/links")
+	@_Links(links = {
 			@Link(rel = "self", href = "/simplehal/links", title = "Self"),
-			@Link(rel = "first", href = "/simplehal/links?id=${response.first}", title = "First") }))
+			@Link(rel = "first", href = "/simplehal/links?id=${response.first}", title = "First") })
 	@Produces({ "application/hal+json", MediaType.APPLICATION_JSON })
 	public Value getValueLinks() {
 		if (value == null)
@@ -76,16 +75,11 @@ public class SimpleHALResource {
 
 	@GET
 	@Path("embedded")
-	@_Links(linkset = @LinkSet(links = {
+	@_Links(links = {
 			@Link(rel = "self", href = "/simplehal/embedded", title = "Self"),
-			@Link(rel = "first", href = "/simplehal/embedded?id=${response.first}", title = "First") }))
+			@Link(rel = "first", href = "/simplehal/embedded?id=${response.first}", title = "First") })
 	@_Embedded({
-//			@Items(name = "Constance", items = "hello", links = @LinkSet(links = { @Link(rel = "only", href = "/simplehal/embedded?id=${item.value}", title = "id ${item.key}") })),
-//			@Items(name = "Nullz", items = "${x}", links = @LinkSet(links = { @Link(rel = "only", href = "/simplehal/embedded?id=${item.value}", title = "id ${item.key}") })),
-//			@Items(name = "Objectificicated", items = "${response.first}", links = @LinkSet(links = { @Link(rel = "only", href = "/simplehal/embedded?id=${item.value}", title = "id ${item.key}") })),
-//			@Items(name = "Arraysious", items = "${response.array}", links = @LinkSet(links = { @Link(rel = "only", href = "/simplehal/embedded?id=${item.value}", title = "id ${item.key}") })),
-//			@Items(name = "Listicle", items = "${response.list}", links = @LinkSet(links = { @Link(rel = "only", href = "/simplehal/embedded?id=${item.value}", title = "id ${item.key}") })),
-			@Items(name = "Mappacious", items = "${response.map}", links = @LinkSet(links = { @Link(rel = "only", href = "/simplehal/embedded?id=${item.value}", title = "id ${item.key}") })) })
+			@Items(name = "Mappacious", items = "${response.map}", links = { @Link(rel = "only", href = "/simplehal/embedded?id=${item.value}", title = "id ${item.key}") }) })
 	@Produces({ "application/hal+json", MediaType.APPLICATION_JSON })
 	public Value getValueEmbedded() {
 		if (value == null)
@@ -95,16 +89,14 @@ public class SimpleHALResource {
 
 	@GET
 	@Path("check")
-	@_Links(linkset = @LinkSet(links = {
+	@_Links(links = {
 			@Link(rel = "self", href = "/simplehal/embedded", title = "Self"),
-			@Link(rel = "first", check = "${response.doFirst}", href = "/simplehal/embedded?id=${response.first}", title = "First") }))
+			@Link(rel = "first", check = "${response.doFirst}", href = "/simplehal/embedded?id=${response.first}", title = "First") })
 	@_Embedded({
-//			@Items(name = "Firstacious", items = "hello", links = @LinkSet(links = { @Link(rel = "first", check = "${response.doFirst}", href = "/simplehal/embedded?id=${item.value}", title = "id ${item.key}") })),
-//			@ItemSet(name = "Arraysious", items = "${response.array}", links = @LinkSet(links = { @Link(rel = "only", href = "/simplehal/embedded?id=${item.value}", title = "id ${item.key}") })),
-//			@ItemSet(name = "Listicle", items = "${response.list}", links = @LinkSet(links = { @Link(rel = "only", href = "/simplehal/embedded?id=${item.value}", title = "id ${item.key}") })),
-			@Items(name = "Mappacious", items = "${response.map}", links = @LinkSet(links = {
+			@Items(name = "Mappacious", items = "${response.map}", links = {
 					@Link(rel = "only", check = "${item.key == 0}", href = "/simplehal/embedded?id=${item.value}", title = "id ${item.key}"),
-					@Link(rel = "first", check = "${response.doFirst}", href = "/simplehal/embedded?id=${response.first}", title = "First") })) })
+					@Link(rel = "first", check = "${response.doFirst}", href = "/simplehal/embedded?id=${response.first}", title = "First") }) 
+			})
 	@Produces({ "application/hal+json", MediaType.APPLICATION_JSON })
 	public Value getValueChecks() {
 		if (value == null)
