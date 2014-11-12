@@ -7,12 +7,10 @@ import java.util.Map;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-
-@XmlRootElement
 public class Value {
 	String first = "one";
 	String second = "two";
-	String[] array = {"abc", "def"};
+	String[] array = { "abc", "def" };
 	List<String> list = new ArrayList<String>();
 	Map<String, Integer> map = new HashMap<String, Integer>();
 	Boolean doFirst = true;
@@ -98,5 +96,5 @@ public class Value {
 	public void setDoMap(Boolean doMap) {
 		this.doMap = doMap;
 	}
-	
+
 }

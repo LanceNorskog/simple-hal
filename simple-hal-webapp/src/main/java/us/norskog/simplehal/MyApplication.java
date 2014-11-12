@@ -47,13 +47,13 @@ import java.util.Set;
 /**
  * @author Pavel Bucek (pavel.bucek at oracle.com)
  */
-@ApplicationPath("/webapp")
+@ApplicationPath("/")
 public class MyApplication extends Application {
-    @Override
-    public Set<Class<?>> getClasses() {
-        final Set<Class<?>> classes = new HashSet<Class<?>>();
-        // register root resource
-        classes.add(SimpleHALResource.class);
-        return classes;
-    }
+	@Override
+	public Set<Class<?>> getClasses() {
+		final Set<Class<?>> classes = new HashSet<Class<?>>();
+		// register root resource
+		classes.add(SimpleHALResource.class);
+		return classes;
+	}
 }

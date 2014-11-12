@@ -54,7 +54,7 @@ public class SimpleHALResource {
 	static Value value = null;
 
 	@GET
-    @Produces("text/plain")
+	@Produces("text/plain")
 	public Value getString() {
 		if (value == null)
 			value = new Value();
@@ -78,8 +78,7 @@ public class SimpleHALResource {
 	@_Links(links = {
 			@Link(rel = "self", href = "/simplehal/embedded", title = "Self"),
 			@Link(rel = "first", href = "/simplehal/embedded?id=${response.first}", title = "First") })
-	@_Embedded({
-			@Items(name = "Mappacious", items = "${response.map}", links = { @Link(rel = "only", href = "/simplehal/embedded?id=${item.value}", title = "id ${item.key}") }) })
+	@_Embedded({ @Items(name = "Mappacious", items = "${response.map}", links = { @Link(rel = "only", href = "/simplehal/embedded?id=${item.value}", title = "id ${item.key}") }) })
 	@Produces({ "application/hal+json", MediaType.APPLICATION_JSON })
 	public Value getValueEmbedded() {
 		if (value == null)
@@ -92,11 +91,11 @@ public class SimpleHALResource {
 	@_Links(links = {
 			@Link(rel = "self", href = "/simplehal/embedded", title = "Self"),
 			@Link(rel = "first", check = "${response.doFirst}", href = "/simplehal/embedded?id=${response.first}", title = "First") })
-	@_Embedded({
-			@Items(name = "Mappacious", items = "${response.map}", links = {
-					@Link(rel = "only", check = "${item.key == 0}", href = "/simplehal/embedded?id=${item.value}", title = "id ${item.key}"),
-					@Link(rel = "first", check = "${response.doFirst}", href = "/simplehal/embedded?id=${response.first}", title = "First") }) 
-			})
+	@_Embedded({ @Items(name = "Mappacious", items = "${response.map}", links = {
+			@Link(rel = "only", check = "${item.key == 0}", 
+					href = "/simplehal/embedded?id=${item.value}", title = "id ${item.key}"),
+			@Link(rel = "first", check = "${response.doFirst}", 
+				href = "/simplehal/embedded?id=${response.first}", title = "First") }) })
 	@Produces({ "application/hal+json", MediaType.APPLICATION_JSON })
 	public Value getValueChecks() {
 		if (value == null)

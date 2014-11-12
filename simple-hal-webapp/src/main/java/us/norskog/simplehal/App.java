@@ -58,25 +58,29 @@ import us.norskog.simplehal._Links;
  */
 public class App {
 
-    private static final URI BASE_URI = URI.create("http://localhost:8080/webapp/");
-    public static final String ROOT_PATH = "simplehal";
+	private static final URI BASE_URI = URI.create("http://localhost:8080/");
+	public static final String ROOT_PATH = "simplehal";
 
-    public static void main(String[] args) {
-        try {
-            System.out.println("\"Hello World\" Jersey Example App");
+	public static void main(String[] args) {
+		try {
+			System.out.println("\"Hello World\" Jersey Example App");
 
-            Map<String, String> initParams = new HashMap<String, String>();
-            initParams.put(
-                    ServerProperties.PROVIDER_PACKAGES+","+_Links.class.getPackage().toString(),
-                    SimpleHALResource.class.getPackage().getName());
-            final HttpServer server = GrizzlyWebContainerFactory.create(BASE_URI, ServletContainer.class, initParams);
+			Map<String, String> initParams = new HashMap<String, String>();
+			initParams.put(ServerProperties.PROVIDER_PACKAGES,
+					SimpleHALResource.class.getPackage().getName() + ","
+							+ "org.glassfish.jersey.jackson" + ","
+							+ "us.norskog.simplehal");
+			final HttpServer server = GrizzlyWebContainerFactory.create(
+					BASE_URI, ServletContainer.class, initParams);
 
-            System.out.println(String.format("Application started.%nTry out %s%s%nHit enter to stop it...",
-                    BASE_URI, ROOT_PATH));
-            System.in.read();
-            server.shutdownNow();
-        } catch (IOException ex) {
-            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+			System.out
+					.println(String
+							.format("Application started.%nTry out %s%s%nHit enter to stop it...",
+									BASE_URI, ROOT_PATH));
+			System.in.read();
+			server.shutdownNow();
+		} catch (IOException ex) {
+			Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 }
