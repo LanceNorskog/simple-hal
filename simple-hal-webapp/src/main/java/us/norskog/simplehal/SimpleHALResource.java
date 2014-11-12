@@ -76,10 +76,12 @@ public class SimpleHALResource {
 	@GET
 	@Path("embedded")
 	@_Links(links = {
-		@Link(rel = "self", href = "/simplehal/embedded", title = "Self"),
-		@Link(rel = "first", href = "/simplehal/embedded?id=${response.first}", title = "First") })
+		@Link(rel = "self", title = "Self", href = "/simplehal/embedded"),
+		@Link(rel = "first", title = "First", 
+			href = "/simplehal/embedded?id=${response.first}") })
 	@_Embedded({ @Items(name = "Mappacious", items = "${response.map}", 
-		links = { @Link(rel = "only", href = "/simplehal/embedded?id=${item.value}", title = "id ${item.key}") }) })
+		links = { @Link(rel = "only", title = "#${item.key}", 
+		href = "/simplehal/embedded?id=${item.value}") }) })
 	@Produces({ "application/hal+json", MediaType.APPLICATION_JSON })
 	public Value getValueEmbedded() {
 		if (value == null)
@@ -90,14 +92,14 @@ public class SimpleHALResource {
 	@GET
 	@Path("check")
 	@_Links(links = {
-		@Link(rel = "self", href = "/simplehal/embedded", title = "Self"),
-		@Link(rel = "first", check = "${response.doFirst}", 
-			href = "/simplehal/embedded?id=${response.first}", title = "First") })
+		@Link(rel = "self", title = "Self", href = "/simplehal/embedded"),
+		@Link(rel = "first", title = "First", 
+			href = "/simplehal/embedded?id=${response.first}") })
 	@_Embedded({ @Items(name = "Mappacious", items = "${response.map}", links = {
-		@Link(rel = "only", check = "${item.key == 0}", 
-			href = "/simplehal/embedded?id=${item.value}", title = "id ${item.key}"),
-		@Link(rel = "first", check = "${response.doFirst}", 
-				href = "/simplehal/embedded?id=${response.first}", title = "First") }) })
+		@Link(rel = "only", title = "id ${item.key}", check = "${item.key == 0}", 
+			href = "/simplehal/embedded?id=${item.value}"),
+		@Link(rel = "first", title = "First", check = "${response.doFirst}", 
+			href = "/simplehal/embedded?id=${response.first}") }) })
 	@Produces({ "application/hal+json", MediaType.APPLICATION_JSON })
 	public Value getValueChecks() {
 		if (value == null)
