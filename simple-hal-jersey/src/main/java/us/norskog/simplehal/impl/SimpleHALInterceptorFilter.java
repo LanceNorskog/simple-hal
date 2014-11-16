@@ -115,7 +115,12 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 	}
 	 
 	String getSelf(String base, String full) {
-		return full.substring(base.length());
+		String self = full.substring(base.length());
+		if (! self.startsWith("/"))
+			self = "/" + self;
+		while (self.endsWith("/"))
+			self = self.substring(0, self.length() - 1);
+		return self;
 	}
 
 	private Evaluator init(ParsedLinkSet parsedLinkSet) {

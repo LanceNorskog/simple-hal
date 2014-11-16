@@ -64,7 +64,7 @@ public class Simple2Test extends JerseyTest {
 		String url = self.get("href");
 		System.out.println(url);
 		
-		assertEquals(url, "helloworld/links");
+		assertEquals(url, "/helloworld/links");
 	}
 	
 	protected org.glassfish.jersey.test.spi.TestContainerFactory getTestContainerFactory() 
