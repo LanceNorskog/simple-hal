@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -111,6 +110,12 @@ public class Builder {
 			System.exit(1);
 		}
 
+	}
+
+	public void addLink(LinksetMap builtLinks, String name, String link) {
+		HashMap<String, String> add = new HashMap<String, String>();
+		add.put("href", link);
+		builtLinks.put(name, new LinkPartsMap(add));
 	}
 
 }

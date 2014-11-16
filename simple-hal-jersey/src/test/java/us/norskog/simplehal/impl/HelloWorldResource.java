@@ -69,7 +69,7 @@ public class HelloWorldResource {
 	@GET
 	@Path("links")
 	@_Links(links = {
-			@Link(rel = "self", href = "${path}/links", title = "Self"),
+			@Link(rel = "self2", href = "${path}/links", title = "Self"),
 			@Link(rel = "first", href = "${path}/links?id=${response.first}", title = "First") })
 	@Produces({ "application/hal+json", MediaType.APPLICATION_JSON })
 	public Value getValueLinks() {
@@ -79,7 +79,7 @@ public class HelloWorldResource {
 	@GET
 	@Path("embedded")
 	@_Links(links = {
-			@Link(rel = "self", href = "${path}/embedded"),
+			@Link(rel = "self2", href = "${path}/embedded"),
 			@Link(rel = "first", href = "${path}/embedded?id=${response.first}", title = "First") })
 	@_Embedded({
 			@Items(name = "Constance", items = "hello", links = { @Link(rel = "only", href = "${path}/embedded?id=${item.value}", title = "id ${item.key}") }),
@@ -96,7 +96,7 @@ public class HelloWorldResource {
 	@GET
 	@Path("check")
 	@_Links(links = {
-			@Link(rel = "self", href = "${path}/embedded", title = "Self"),
+			@Link(rel = "self2", href = "${path}/embedded", title = "Self"),
 			@Link(rel = "first", check = "${response.doFirst}", href = "${path}/embedded?id=${response.first}", title = "First") })
 	@_Embedded({
 			@Items(name = "Firstacious", items = "hello", links = { @Link(rel = "first", check = "${response.doFirst}", href = "${path}/embedded?id=${item.value}", title = "id ${item.key}") }),

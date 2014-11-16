@@ -4,7 +4,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 import javax.ws.rs.ext.WriterInterceptor;
@@ -54,6 +53,11 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 			throws IOException {
 		UriInfo baseUri = requestContext.getUriInfo();
 		baseURIs.set(baseUri);
+		URI abs = baseUri.getAbsolutePath();
+		URI request = baseUri.getRequestUri();
+		requestContext.setProperty("baseURI", baseUri.getBaseUri().toString());
+		requestContext.setProperty("absURI", abs.toString());
+		requestContext.setProperty("requestURI", request.toString());
 	}
 
 	//   @Override
@@ -79,6 +83,9 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 			}
 			String path = getPath(context.getAnnotations());
 			LinksetMap builtLinks = builder.buildLinks(parsedLinkSet, evaluator, path, response);
+			// TODO: add curies for base path
+			String selfLink = getSelf((String) context.getProperty("baseURI"), (String) context.getProperty("requestURI"));
+			builder.addLink(builtLinks, "self", selfLink);
 			EmbeddedMap builtEmbedded = builder.buildEmbedded(parsedLinkSet, evaluator, path, response);
 			Map<String, Object> formatted = formatter.format(response, builtLinks, builtEmbedded);
 			context.setEntity(formatted);
@@ -105,6 +112,10 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 		if (! path.startsWith("/"))
 			path = "/" + path;
 		return path;
+	}
+	 
+	String getSelf(String base, String full) {
+		return full.substring(base.length());
 	}
 
 	private Evaluator init(ParsedLinkSet parsedLinkSet) {

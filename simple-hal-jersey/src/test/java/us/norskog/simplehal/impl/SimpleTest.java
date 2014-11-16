@@ -98,7 +98,7 @@ public class SimpleTest extends JerseyTest {
 		Map links = (Map) unpacked.get("_links");
 		Map<String,Object> linkSet = (Map<String, Object>) unpacked.get("_links");
 		LinksHAL linksHal = LinksHAL.unpack(linkSet);
-		String url = linksHal.get("self").get("href");
+		String url = linksHal.get("self2").get("href");
 		System.out.println(url);
 		assertTrue(url.equals("/helloworld/links"));
 		assertFalse(url.contains("localhost"));
@@ -112,7 +112,7 @@ public class SimpleTest extends JerseyTest {
 		Map links = (Map) unpacked.get("_links");
 		Map<String,Object> linkSet = (Map<String, Object>) unpacked.get("_links");
 		LinksHAL linksHal = LinksHAL.unpack(linkSet);
-		String url = linksHal.get("self").get("href");
+		String url = linksHal.get("self2").get("href");
 		assertNotNull(url);
 	}
 
@@ -185,42 +185,5 @@ public class SimpleTest extends JerseyTest {
 			e.printStackTrace();
 		}
 	}
-
-}
-
-// secret classes to help me track the trees.
-
-class LinksHAL extends HashMap< String, Map<String, String>> {
-	static private ObjectMapper mapper = new ObjectMapper();
-
-	static LinksHAL unpack(Map ob) throws IOException {
-		LinksHAL out = null;
-		byte[] b;
-
-		b = mapper.writeValueAsBytes(ob);
-		out = mapper.readValue(b, LinksHAL.class);
-
-		return out;
-	}
-
-}
-
-class EmbeddedHAL extends HashMap<String,List<Map<String,Map<String,Map<String,String>>>>> {
-	static private ObjectMapper mapper = new ObjectMapper();
-
-	static EmbeddedHAL unpack(Map ob) throws IOException {
-		Map<String,Object> ob2 = ob;
-//		for(String key: ob2.keySet())
-//			System.out.println("_embedded: " + key);
-		EmbeddedHAL out = null;
-		byte[] b;
-
-		b = mapper.writeValueAsBytes(ob);
-		out = mapper.readValue(b, EmbeddedHAL.class);
-
-		return out;
-	}
-
-
 
 }
