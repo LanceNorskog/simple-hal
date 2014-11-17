@@ -42,7 +42,7 @@ public @interface Link {
 	 * <b>href</b> element (required)
 	 * @return
 	 */
-	String href();
+	String[] href();
 	
 	/**
 	 * More elements. Even-numbered array of strings.

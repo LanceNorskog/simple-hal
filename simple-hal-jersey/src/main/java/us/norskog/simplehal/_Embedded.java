@@ -16,9 +16,8 @@ import java.lang.annotation.Target;
  * The EL expression for choosing the collection is in the @Items annotation.
  */
 
-@Target({ElementType.TYPE, ElementType.METHOD})
+//@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface _Embedded {
 	Items[] value();
-	String doc() default "";
 }

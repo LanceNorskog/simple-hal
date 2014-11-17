@@ -32,6 +32,16 @@ import java.util.Map;
  * Interceptor on the outgo because only Interceptors get the data.
  * Oy!
  * 
+ * TODO: add support for external additions to endpoints.
+ *   it might add to this, this might pull from it.
+ *   haven't decided.
+ *   
+ * TODO: maybe can just give entire link with multiple ELs?
+ *   ParsedLinkSet is maybe overkill?
+ *   
+ * TODO: add path/url/this/params to EL?
+ *   Definitely add full base to curies
+ * 
  */
 
 @Provider
@@ -63,7 +73,9 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 	//   @Override
 	public void aroundWriteTo(WriterInterceptorContext context)
 			throws IOException, WebApplicationException {
-
+		System.out.println("Generic Type: " + context.getGenericType());
+		System.out.println("Type: " + context.getType());
+		
 		try {
 			Object entity = context.getEntity();
 			if (!context.getMediaType().toString().equals(HAL) || entity == null) {
@@ -85,7 +97,8 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 			LinksetMap builtLinks = builder.buildLinks(parsedLinkSet, evaluator, path, response);
 			// TODO: add curies for base path
 			String selfLink = getSelf((String) context.getProperty("baseURI"), (String) context.getProperty("requestURI"));
-			builder.addLink(builtLinks, "self", selfLink);
+			if (! builtLinks.containsKey("self"))
+				builder.addLink(builtLinks, "self", selfLink);
 			EmbeddedMap builtEmbedded = builder.buildEmbedded(parsedLinkSet, evaluator, path, response);
 			Map<String, Object> formatted = formatter.format(response, builtLinks, builtEmbedded);
 			context.setEntity(formatted);
@@ -133,5 +146,5 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 		}
 		return evaluators.get(parsedLinkSet);
 	}
-
+	
 }

@@ -9,16 +9,18 @@ import java.lang.annotation.Target;
  * Top-level container for Link annotations.
  * 
  * Specify HAL hyperlinks to add to your endpoint's return value.
- * endpoint must return a structure, map<String,Object>, array,
- * or JSON in a string.
+ * endpoint may return a structure, map<String,Object>, array,
+ * or JSON in a string. If it returns a structure or map<String,Object>
+ * these links will be added. 
  * 
  * @author lance
  *
  */
 
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface _Links {
-	Link[] links();
+	Link[] links() default {};
 	String doc() default "";
+	Class<? extends Object>[] linkset() default Object.class;
 }

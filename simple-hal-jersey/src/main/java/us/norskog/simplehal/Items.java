@@ -10,6 +10,8 @@ import java.lang.annotation.Target;
  * A set of links is created with each item visible to the link value expressions.
  * EL expressions inside the @Link annotations can refer to item.key and item.value
  * which are the n'th position and value for the collection fetched by the items() EL.
+ * Bundle is a class which carries a bunch of links. This is the only way to do macro
+ * substitution in annotations!
  */
 
 @Target(ElementType.METHOD)
@@ -28,5 +30,10 @@ public @interface Items {
 	/**
 	 * Individual links generated from all items returned by expression
 	 */
-	Link[] links();
+	Link[] links() default {};
+	
+	/**
+	 * Individual links generated from all items returned by expression
+	 */
+	Class<? extends Object>[] linkset() default {};
 }

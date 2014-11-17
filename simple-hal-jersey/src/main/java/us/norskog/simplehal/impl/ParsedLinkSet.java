@@ -155,15 +155,20 @@ class LinkStore {
 	private String check = "true";
 	private Map<String,String> parts = new HashMap<String, String>();
 
-	public LinkStore(String rel, String title, String href) {
+	public LinkStore(String rel, String title, String[] href) {
 		if (rel == null)
 			rel = "#NULL";
 		parts.put(ParsedLinkSet.REL, rel);
 		if (title != null)
 			parts.put(ParsedLinkSet.TITLE, title);
 		if (href == null)
-			href = "#NULL";
-		parts.put(ParsedLinkSet.HREF, href);
+			parts.put(ParsedLinkSet.HREF, "#NULL");
+		else {
+			StringBuilder sb = new StringBuilder();
+			for(String bit: href)
+				sb.append(bit);
+			parts.put(ParsedLinkSet.HREF, sb.toString());
+		}
 	}
 
 	public String getName() {
