@@ -42,6 +42,8 @@ import java.util.Map;
  * TODO: add path/url/this/params to EL?
  *   Definitely add full base to curies
  * 
+ * TODO: change URI from threadlocal to retained property because 
+ *    jersey is goofy about threads.
  */
 
 @Provider

@@ -22,5 +22,5 @@ import java.lang.annotation.Target;
 public @interface _Links {
 	Link[] links() default {};
 	String doc() default "";
-	Class<? extends Object>[] linkset() default Object.class;
+	Class<? extends Object> linkset() default Object.class;
 }

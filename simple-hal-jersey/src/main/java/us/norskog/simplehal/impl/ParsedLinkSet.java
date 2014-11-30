@@ -1,6 +1,7 @@
 package us.norskog.simplehal.impl;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import us.norskog.simplehal.Hyper;
 import us.norskog.simplehal.Items;
 import us.norskog.simplehal.Link;
 import us.norskog.simplehal._Embedded;
@@ -32,6 +34,9 @@ public class ParsedLinkSet {
 		this.annos = annos;
 		_Links _linksAnno = (_Links) getAnno(annos, _Links.class);
 		_Embedded _embeddedAnno = (_Embedded) getAnno(annos, _Embedded.class);
+		if (_linksAnno.linkset() != null) {
+			_linksAnno = getHyperAnnos(_linksAnno);
+		}
 		if (_linksAnno != null) {
 			Link[] linkSpecs = _linksAnno.links();
 			links = storeLinks(linkSpecs);
@@ -47,6 +52,27 @@ public class ParsedLinkSet {
 				}
 			}
 		}
+	}
+
+	// TODO: change to links/embedded
+	private _Links getHyperAnnos(_Links _linksAnno) {
+		Class cl = _linksAnno.linkset();
+		if (! Hyper.class.isAssignableFrom(cl)) {
+			return null;
+		}
+		try {
+			Method m = cl.getMethod("getLink", Object.class);
+			return m.getAnnotation(_Links.class);
+		} catch (NoSuchMethodException e) {
+			// Cannot happen
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// Cannot happen
+			e.printStackTrace();
+		}
+		
+		
+		return null;
 	}
 
 	private ItemStore storeItem(Items items) {

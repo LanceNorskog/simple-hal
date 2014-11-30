@@ -39,11 +39,14 @@
  */
 package us.norskog.simplehal.impl;
 
+import java.util.Map;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import us.norskog.simplehal.Hyper;
 import us.norskog.simplehal._Embedded;
 import us.norskog.simplehal._Links;
 import us.norskog.simplehal.Link;
@@ -109,8 +112,27 @@ public class HelloWorldResource {
 	public Value getValueChecks() {
 		return value;
 	}
+	
+	@GET
+	@Path("hyper")
+	@_Links(linkset = LinkSupply.class)
+	@Produces({ "application/hal+json", MediaType.APPLICATION_JSON })
+	public Value getHyper() {
+		return value;
+	}
 
 	static void setValue(Value newValue) {
 		value = newValue;
 	}
+}
+
+class LinkSupply extends Hyper {
+
+	@_Links(links = {
+			@Link(rel = "first", href = "${path}/links?id=${response.first}", title = "First") })
+	@Override
+	public Map<String, ? extends Object> getLink(Object base) {
+		return null;
+	}
+	
 }
