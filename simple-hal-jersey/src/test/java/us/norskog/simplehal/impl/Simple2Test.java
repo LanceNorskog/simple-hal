@@ -55,6 +55,7 @@ public class Simple2Test extends JerseyTest {
 		Builder request = target("helloworld/hyper").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
 		final Map<String,Object> unpacked = request.get(Map.class);
 		assertNotNull(unpacked.get("_links"));
+		assertNotNull(unpacked.get("_embedded"));
 	}
 	
 	protected org.glassfish.jersey.test.spi.TestContainerFactory getTestContainerFactory() 

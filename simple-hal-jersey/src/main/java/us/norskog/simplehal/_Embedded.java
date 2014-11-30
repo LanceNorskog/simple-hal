@@ -19,5 +19,6 @@ import java.lang.annotation.Target;
 //@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface _Embedded {
-	Items[] value();
+	Items[] links() default {};
+	Class<? extends Object> linkset() default Object.class;
 }

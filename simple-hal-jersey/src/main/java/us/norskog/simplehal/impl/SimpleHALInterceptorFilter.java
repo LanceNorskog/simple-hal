@@ -47,8 +47,8 @@ import java.util.Map;
  */
 
 @Provider
-@_Links(links = { @Link(href = "", rel = "") })
-@_Embedded(value = { @Items(items = "", links = { @Link(href = "", rel = "") }, name = "") })
+@_Links(linkset = Object.class)
+@_Embedded(linkset = Object.class)
 public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerRequestFilter {
 	public static final String HAL = "application/hal+json";
 

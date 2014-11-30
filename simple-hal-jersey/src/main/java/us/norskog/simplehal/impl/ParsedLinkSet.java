@@ -34,15 +34,18 @@ public class ParsedLinkSet {
 		this.annos = annos;
 		_Links _linksAnno = (_Links) getAnno(annos, _Links.class);
 		_Embedded _embeddedAnno = (_Embedded) getAnno(annos, _Embedded.class);
-		if (_linksAnno.linkset() != null) {
-			_linksAnno = getHyperAnnos(_linksAnno);
+		if (Hyper.class.isAssignableFrom(_linksAnno.linkset())) {
+			_linksAnno = getHyperAnnos(_Links.class, _linksAnno.linkset());
 		}
 		if (_linksAnno != null) {
 			Link[] linkSpecs = _linksAnno.links();
 			links = storeLinks(linkSpecs);
 		}
 		if (_embeddedAnno != null) {
-			Items[] items = _embeddedAnno.value();
+			if (Hyper.class.isAssignableFrom(_embeddedAnno.linkset())) {
+				_embeddedAnno = getHyperAnnos(_Embedded.class, _embeddedAnno.linkset());
+			}
+			Items[] items = _embeddedAnno.links();
 			if (items.length > 0) {
 				embeddedItems = new ArrayList<ItemStore>();
 				for(int i = 0; i < items.length; i++) {
@@ -55,14 +58,13 @@ public class ParsedLinkSet {
 	}
 
 	// TODO: change to links/embedded
-	private _Links getHyperAnnos(_Links _linksAnno) {
-		Class cl = _linksAnno.linkset();
-		if (! Hyper.class.isAssignableFrom(cl)) {
+	private <T> T getHyperAnnos(Class<T> _annoClass, Class linkset) {
+		if (! Hyper.class.isAssignableFrom(linkset)) {
 			return null;
 		}
 		try {
-			Method m = cl.getMethod("getLink", Object.class);
-			return m.getAnnotation(_Links.class);
+			Method m = linkset.getMethod("getLink", Object.class);
+			return (T) m.getAnnotation((Class) _annoClass);
 		} catch (NoSuchMethodException e) {
 			// Cannot happen
 			e.printStackTrace();
