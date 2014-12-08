@@ -13,7 +13,7 @@ This example shows how to use SimpleHAL to paginate through search engine result
   total:34
 }
 ```
-*offset* is the position of the first result in the set. *rows" is the number of results to return. *total* is the total number of search results available. This set of links can page through the result set and supply First/Next/Previous/Last buttons for a UI:
+*offset* is the position of the first result in the set. *rows" is the number of results to return. *total* is the total number of search results available. This set of links can incrementally page through the result set by supplying :
 ```
 @_Links(links = {
   @Link(rel = "current", href = {"/movie?q=${response.q}&offset=${response.offset}&rows=${response.rows}", title = "Current"},
@@ -25,7 +25,7 @@ This example shows how to use SimpleHAL to paginate through search engine result
   @Link(rel = "last", href = {"/movie?q=${response.q}&offset=${response.total - response.rows}&rows=${response.rows}", title = "Last"}
 })
 ```
-Each link can be used verbatim in for the First, Next and Previous buttons in a search UI. Next and Previous use check expressions to decide whether or not that link makes sense. If we're at the end of the list, there's no Next link. If we're at the beginning of the list, there's no Previous link. 
+Each link can be used verbatim for the First, Next and Previous buttons in a search UI. Next and Previous use check expressions to decide whether or not that link makes sense. If we're at the end of the list, there's no Next link. If we're at the beginning of the list, there's no Previous link. 
 
 
 
