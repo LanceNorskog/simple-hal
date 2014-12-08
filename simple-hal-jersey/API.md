@@ -72,18 +72,18 @@ _links:{[
 ##### **@_Embedded** example
 ```
 @_Embedded(links = {
-		@Items(name = "directors", items = "${response.directors}", 
-			links = { @Link(rel = "director", href = "/director/${item.value.directorId}", 
-			title = "id ${item.value.name}"), more = {"index","${item.key}" })})
+  @Items(name = "directors", items = "${response.directors}", 
+    links = { @Link(rel = "director", href = "/director/${item.value.directorId}", 
+    title = "id ${item.value.name}"), more = {"index","${item.key}" })})
 ```
 Adds another top-level entry to the returned JSON:
 ```
 _embedded:{
-    directors:[
-    	{_links:{
-          {href:"/director/abc", title:"Reed Acted", index:"1"},
-          {href:"/director/def", title:"Alan Smithee", index:"2"}
-      }}
-    ]
-  }
+  directors:[
+    {_links:{
+      {href:"/director/abc", title:"Reed Acted", index:"1"},
+      {href:"/director/def", title:"Alan Smithee", index:"2"}
+    }}
+  ]
+}
 ```
