@@ -55,16 +55,36 @@ It will return this JSON:
 }
 ```
 
-##### **@_Links**
+##### **@_Links** example
 
 ```
 @_Links(links = @Link(rel = "movie", href = "/movie/${response.movieId}", title = "Movie")))
 ```
-This will add a top-level entry to the returned JSON:
+Adds a top-level entry to the returned JSON:
 ```
 _links:{[
   self:{href:"/movies/123456"},
   movieId:{href:"/movies/123456","title":"Appalling Tripe"}
 ]}
 ```
-
+##### **@_Embedded** example
+```
+@_Embedded(links = {
+		@Items(name = "directors", items = "${response.directors}", 
+			links = { @Link(rel = "director", href = "/director/${item.value.directorId}", 
+			title = "id ${item.value.name}"), more = {"index","${item.key}" })})
+```
+Adds another top-level entry to the returned JSON:
+```
+_embedded:{
+    directors:[
+	    {_links:{
+          {href:"/director/abc", title:"Reed Acted", index:"1"},
+          {href:"/director/def", title:"Alan Smithee", index:"2"}
+      }
+    ]
+  }
+```
+#### Advanced Usage
+##### Supplier
+The **Supplier** class 
