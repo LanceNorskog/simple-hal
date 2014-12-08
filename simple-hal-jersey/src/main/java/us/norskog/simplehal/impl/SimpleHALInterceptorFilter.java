@@ -9,6 +9,7 @@ import javax.ws.rs.ext.Provider;
 import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 
+import us.norskog.simplehal.Supplier;
 import us.norskog.simplehal.Items;
 import us.norskog.simplehal.Link;
 import us.norskog.simplehal._Embedded;
@@ -47,8 +48,8 @@ import java.util.Map;
  */
 
 @Provider
-@_Links(linkset = Object.class)
-@_Embedded(linkset = Object.class)
+@_Links(linkset = Supplier.class)
+@_Embedded(linkset = Supplier.class)
 public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerRequestFilter {
 	public static final String HAL = "application/hal+json";
 

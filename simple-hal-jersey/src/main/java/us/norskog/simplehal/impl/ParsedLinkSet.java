@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import us.norskog.simplehal.Hyper;
+import us.norskog.simplehal.Supplier;
 import us.norskog.simplehal.Items;
 import us.norskog.simplehal.Link;
 import us.norskog.simplehal._Embedded;
@@ -34,7 +34,7 @@ public class ParsedLinkSet {
 		this.annos = annos;
 		_Links _linksAnno = (_Links) getAnno(annos, _Links.class);
 		_Embedded _embeddedAnno = (_Embedded) getAnno(annos, _Embedded.class);
-		if (Hyper.class.isAssignableFrom(_linksAnno.linkset())) {
+		if (Supplier.class.isAssignableFrom(_linksAnno.linkset())) {
 			_linksAnno = getHyperAnnos(_Links.class, _linksAnno.linkset());
 		}
 		if (_linksAnno != null) {
@@ -42,7 +42,7 @@ public class ParsedLinkSet {
 			links = storeLinks(linkSpecs);
 		}
 		if (_embeddedAnno != null) {
-			if (Hyper.class.isAssignableFrom(_embeddedAnno.linkset())) {
+			if (Supplier.class.isAssignableFrom(_embeddedAnno.linkset())) {
 				_embeddedAnno = getHyperAnnos(_Embedded.class, _embeddedAnno.linkset());
 			}
 			Items[] items = _embeddedAnno.links();
@@ -59,7 +59,7 @@ public class ParsedLinkSet {
 
 	// TODO: change to links/embedded
 	private <T> T getHyperAnnos(Class<T> _annoClass, Class linkset) {
-		if (! Hyper.class.isAssignableFrom(linkset)) {
+		if (! Supplier.class.isAssignableFrom(linkset)) {
 			return null;
 		}
 		try {

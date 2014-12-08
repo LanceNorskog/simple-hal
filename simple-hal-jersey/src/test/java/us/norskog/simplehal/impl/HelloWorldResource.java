@@ -46,7 +46,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import us.norskog.simplehal.Hyper;
+import us.norskog.simplehal.Supplier;
 import us.norskog.simplehal._Embedded;
 import us.norskog.simplehal._Links;
 import us.norskog.simplehal.Link;
@@ -127,7 +127,7 @@ public class HelloWorldResource {
 	}
 }
 
-class LinkSupplier extends Hyper {
+class LinkSupplier extends Supplier {
 
 	@_Links(links = {
 			@Link(rel = "first", href = "${path}/links?id=${response.first}", title = "First") })
@@ -138,7 +138,7 @@ class LinkSupplier extends Hyper {
 	
 }
 
-class EmbeddedSupplier extends Hyper {
+class EmbeddedSupplier extends Supplier {
 
 	@_Embedded(links = @Items(name = "", items = "", links = {}))
 	@Override
