@@ -1,25 +1,25 @@
 ### SimpleHAL API
 There are 5 classes in the API: 4 annotations and one abstract class.
 
-#### *@_Links*
+#### **@_Links**
 
-The @_Links annotation specifies a collection of top-level links.
+The `@_Links` annotation specifies a collection of top-level links.
 
-*@Link* 
+**@Link** 
 
-The @Link annotation specifies one link. It is only used inside the @_Links.
+The `@Link` annotation specifies one link. It is only used inside `@_Links`.
 
-*@_Embedded*
+**@_Embedded**
 
-The *@_Embedded* annotations specifies set of links for items in a collections.
+The `@_Embedded` annotations specifies set of links for items in a collections.
 
-*@Items*
+**@Items**
 
-The *@Items* annotation specifies a set of links for an item in a collection.
+The `@Items` annotation specifies a set of links for an item in a collection.
 It is only used inside @_Embedded annotations.
 
-*Supplier*
+**Supplier**
 
 This class provides two features:
-* It can be used instead of an annotation to supply links to @_Links and @_Embedded.
+* It can be used instead of an annotation to supply links to `@_Links` and `@_Embedded`.
 * It is used as a template feature for annotations, and allows annotations to be re-used across multiple Jersey endpoints.
