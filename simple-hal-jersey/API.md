@@ -26,7 +26,9 @@ This class provides two features:
 * It is used as a template feature for annotations, and allows annotations to be re-used across multiple Jersey endpoints.
 
 **EL Language**
+
 The EL *expression language* is used inside link specification strings to substitute data items into links.
+EL was originally created as part of the JSP specification. Our use of EL requires that response objects be maps of String->Object, or POJOs with getters. It does not do arbitary code execution or [print */etc/passwd* to the API caller](http://bouk.co/blog/elasticsearch-rce/).
 
 #### Usage
 ##### Jersey Endpoint
@@ -85,14 +87,13 @@ _embedded:{
     ]
   }
 ```
-#### Advanced Usage
-##### Supplier
+##### **Supplier** example
 The **Supplier** class adds two features to SimpleHAL:
 
 * It can create links instead of using the annotations.
 * It supplies a template feature so that an annotation need only be declared once.
 
-This last is very important- the annotations are verbose and difficult to read, and block-copying them is bad practice. Java's Annotation feature does not supply templates by default. **Supplier** supplies a slightly hacky workaround for this lack by the simple expedient of allowing you to declare **@_Links** and **@_Embedded** on a method in the **Supplier** class rather than on Jersey endpoints. We will use the above annotations as an example:
+This last is very useful- the annotations are verbose and difficult to read, and block-copying them is bad practice. Java's Annotation feature does not supply templates by default. **Supplier** supplies a slightly hacky workaround for this lack by the simple expedient of allowing you to declare **@_Links** and **@_Embedded** on a method in the **Supplier** class rather than on Jersey endpoints. We will use the above annotations as an example:
 ```
 public class MovieSupplier extends Supplier {
   @_Links(links = @Link(rel = "movie", href = "/movie/${response.movieId}", title = "Movie")))
@@ -113,4 +114,9 @@ We can remove the **@_Links** annotation from *movieGet()* and instead add this 
 ```
 @_Links(linkset = MovieSupplier.class)
 ```
-This uses the above Supplier class as a vessel for the original **@_Links** annotation.
+This uses the above Supplier class as a vessel for the original **@_Links** annotation. Real-life use of **@_Links** will be a few lines of text and use of **@_Embedded** can be several lines of text. Duplicating this stuff is very bad coding practice, and quickly unreadable.
+
+There can be several Supplier classes instead of just one. For example, if MovieJson includes a 'year' field and there is a search endpoint */year/{number}* one might also create a YearSupplier class for the year search **_@Links** annotation. The **@_Links** annotation for all three endpoints would then be:
+```
+@_Links(linkset = {MovieSupplier.class, YearSupplier.class})
+```
