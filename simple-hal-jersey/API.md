@@ -78,13 +78,39 @@ Adds another top-level entry to the returned JSON:
 ```
 _embedded:{
     directors:[
-	    {_links:{
+    	{_links:{
           {href:"/director/abc", title:"Reed Acted", index:"1"},
           {href:"/director/def", title:"Alan Smithee", index:"2"}
-      }
+      }}
     ]
   }
 ```
 #### Advanced Usage
 ##### Supplier
-The **Supplier** class 
+The **Supplier** class adds two features to SimpleHAL:
+
+* It can create links instead of using the annotations.
+* It supplies a template feature so that an annotation need only be declared once.
+
+This last is very important- the annotations are verbose and difficult to read, and block-copying them is bad practice. Java's Annotation feature does not supply templates by default. **Supplier** supplies a slightly hacky workaround for this lack by the simple expedient of allowing you to declare **@_Links** and **@_Embedded** on a method in the **Supplier** class rather than on Jersey endpoints. We will use the above annotations as an example:
+```
+public class MovieSupplier extends Supplier {
+  @_Links(links = @Link(rel = "movie", href = "/movie/${response.movieId}", title = "Movie")))
+  public Map<String,Object> getLinks(Object o) {;}
+}
+```
+Suppose we have two more Jersey endpoints for creating & deleting movie records:
+```
+@PUT
+@Path("movie")
+public MovieJson putMovie(@PathParam("movieId") String movieId) {return new MovieJson...}
+
+@DELETE
+@Path("movie")
+public MovieJson deleteMovie(@PathParam("movieId") String movieId) {return new MovieJson...}
+```
+We can remove the **@_Links** annotation from *movieGet()* and instead add this **@_Links** annotation to all three endpoints:
+```
+@_Links(linkset = MovieSupplier.class)
+```
+This uses the above Supplier class as a vessel for the original **@_Links** annotation.
