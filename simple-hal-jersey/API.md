@@ -74,7 +74,7 @@ _links:{[
 @_Embedded(links = {
   @Items(name = "directors", items = "${response.directors}", 
     links = { @Link(rel = "director", href = "/directors/${item.value.directorId}", 
-    title = "id ${item.value.name}"), more = {"index","${item.key}" })})
+      title = "id ${item.value.name}"), more = {"index","${item.key}" })})
 ```
 Adds another top-level entry to the returned JSON:
 ```
