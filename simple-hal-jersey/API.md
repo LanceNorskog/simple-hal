@@ -52,7 +52,7 @@ It will return this JSON:
   year:"1940",
   directors:[
     {directorId:"abc", name:"Reed Acted"},
-    [directorId:"def", name:"Alan Smithee"}
+    {directorId:"def", name:"Alan Smithee"}
   ]
 }
 ```
@@ -73,7 +73,7 @@ _links:{[
 ```
 @_Embedded(links = {
   @Items(name = "directors", items = "${response.directors}", 
-    links = { @Link(rel = "director", href = "/director/${item.value.directorId}", 
+    links = { @Link(rel = "director", href = "/directors/${item.value.directorId}", 
     title = "id ${item.value.name}"), more = {"index","${item.key}" })})
 ```
 Adds another top-level entry to the returned JSON:
@@ -81,8 +81,8 @@ Adds another top-level entry to the returned JSON:
 _embedded:{
   directors:[
     {_links:{
-      {href:"/director/abc", title:"Reed Acted", index:"1"},
-      {href:"/director/def", title:"Alan Smithee", index:"2"}
+      {href:"/directors/abc", title:"Reed Acted", index:"1"},
+      {href:"/directors/def", title:"Alan Smithee", index:"2"}
     }}
   ]
 }
