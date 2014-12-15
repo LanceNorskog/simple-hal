@@ -1,6 +1,6 @@
 ### SimpleHAL API
 #### API
-There are 6 features in the API: 4 annotations, an inteface and the EL language.
+There are 6 features in the API: 4 annotations, a class and the EL language.
 
 **@_Links**
 
@@ -21,8 +21,8 @@ It is only used inside @_Embedded annotations.
 
 **Supplier**
 
-This interface provides two features:
-* A Supplier can be used instead of an annotation to supply links to `@_Links` and `@_Embedded`.
+This class provides two features:
+* A Supplier object can be used to supply links to `@_Links` and `@_Embedded` in addition to the annotations.
 * A Supplier can also be used as a template feature for annotations, allowing annotations to be re-used across multiple Jersey endpoints. See more in *Advanced Usage*.
 
 **EL Language**
