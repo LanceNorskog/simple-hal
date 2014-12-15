@@ -39,11 +39,14 @@
  */
 package us.norskog.simplehal.impl;
 
+import java.util.Map;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import us.norskog.simplehal.Supplier;
 import us.norskog.simplehal._Embedded;
 import us.norskog.simplehal._Links;
 import us.norskog.simplehal.Link;
@@ -81,7 +84,7 @@ public class HelloWorldResource {
 	@_Links(links = {
 			@Link(rel = "self2", href = "${path}/embedded"),
 			@Link(rel = "first", href = "${path}/embedded?id=${response.first}", title = "First") })
-	@_Embedded({
+	@_Embedded(links = {
 			@Items(name = "Constance", items = "hello", links = { @Link(rel = "only", href = "${path}/embedded?id=${item.value}", title = "id ${item.key}") }),
 			@Items(name = "Nullz", items = "${x}", links = { @Link(rel = "only", href = "${path}/embedded?id=${item.value}", title = "id ${item.key}") }),
 			@Items(name = "Objectificicated", items = "${response.first}", links = { @Link(rel = "only", href = "${path}/embedded?id=${item.value}", title = "id ${item.key}") }),
@@ -98,7 +101,7 @@ public class HelloWorldResource {
 	@_Links(links = {
 			@Link(rel = "self2", href = "${path}/embedded", title = "Self"),
 			@Link(rel = "first", check = "${response.doFirst}", href = "${path}/embedded?id=${response.first}", title = "First") })
-	@_Embedded({
+	@_Embedded(links = {
 			@Items(name = "Firstacious", items = "hello", links = { @Link(rel = "first", check = "${response.doFirst}", href = "${path}/embedded?id=${item.value}", title = "id ${item.key}") }),
 			@Items(name = "Arraysious", items = "${response.array}", links = { @Link(rel = "only", check = "${response.doArray}", href = "${path}/embedded?id=${item.value}", title = "id ${item.key}") }),
 			@Items(name = "Listicle", items = "${response.list}", links = { @Link(rel = "only", check = "${response.doList}", href = "${path}/embedded?id=${item.value}", title = "id ${item.key}") }),
@@ -109,8 +112,41 @@ public class HelloWorldResource {
 	public Value getValueChecks() {
 		return value;
 	}
+	
+	@GET
+	@Path("hyper")
+	@_Links(linkset = LinkSupplier.class)
+	@_Embedded(linkset = EmbeddedSupplier.class)
+	@Produces({ "application/hal+json", MediaType.APPLICATION_JSON })
+	public Value getHyper() {
+		return value;
+	}
 
 	static void setValue(Value newValue) {
 		value = newValue;
 	}
+}
+
+class LinkSupplier extends Supplier {
+
+	@_Links(links = {
+			@Link(rel = "first", href = "${path}/links?id=${response.first}", title = "First") })
+	@Override
+	public Map<String, ? extends Object> getLink(Object base) {
+		return null;
+	}
+	
+}
+
+class EmbeddedSupplier extends Supplier {
+
+	@_Embedded(links = {
+			@Items(name = "Firstacious", items = "", 
+					links = { @Link(rel = "first", check = "${response.doFirst}",
+					href = "${path}/embedded?id=${item.value}", title = "id ${item.key}") })})
+	
+	public Map<String, ? extends Object> getLink(Object base) {
+		return null;
+	}
+	
 }

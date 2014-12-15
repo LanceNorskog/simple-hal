@@ -50,21 +50,12 @@ public class Simple2Test extends JerseyTest {
 	}
 
 	@Test
-	public void pathTest() throws IOException {
+	public void hyperTest() {
 		HelloWorldResource.setValue(new Value());
-		Builder request = target("helloworld/links").request(SimpleHALInterceptorFilter.HAL);
+		Builder request = target("helloworld/hyper").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
 		final Map<String,Object> unpacked = request.get(Map.class);
-		Map links = (Map) unpacked.get("_links");
-		Map<String,Object> linkSet = (Map<String, Object>) unpacked.get("_links");
-		System.out.println("linkSet: " + linkSet);
-		LinksHAL linksHal = LinksHAL.unpack(linkSet);
-		Set<String> keySet = linksHal.keySet();
-		System.out.println("keyset: " + keySet);
-		Map<String, String> self = linksHal.get("self");
-		String url = self.get("href");
-		System.out.println(url);
-		
-		assertEquals(url, "/helloworld/links");
+		assertNotNull(unpacked.get("_links"));
+		assertNotNull(unpacked.get("_embedded"));
 	}
 	
 	protected org.glassfish.jersey.test.spi.TestContainerFactory getTestContainerFactory() 

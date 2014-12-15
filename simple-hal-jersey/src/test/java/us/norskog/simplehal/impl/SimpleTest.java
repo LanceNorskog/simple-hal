@@ -44,14 +44,8 @@ public class SimpleTest extends JerseyTest {
 	}
 
 	@Test
-	public void noTest() {
-		assertTrue(true);
-		System.out.println("noTest");
-	}
-
-	@Test
 	public void topTest() {
-		System.out.println("topTest");
+//		System.out.println("topTest");
 		HelloWorldResource.setValue(new Value());
 		Builder request = target("helloworld").request("text/plain");
 		String response = request.get(String.class);
@@ -60,7 +54,7 @@ public class SimpleTest extends JerseyTest {
 
 	@Test(expected=WebApplicationException.class)
 	public void arrayTest() {
-		System.out.println("arrayTest");
+//		System.out.println("arrayTest");
 		HelloWorldResource.setValue(new Value());
 		Builder request = target("helloworld/array").request(SimpleHALInterceptorFilter.HAL);
 		String response = request.get(String.class);
@@ -72,7 +66,7 @@ public class SimpleTest extends JerseyTest {
 	 */
 	@Test
 	public void nullTest() {
-		System.out.println("nullTest");
+//		System.out.println("nullTest");
 		HelloWorldResource.setValue(new Value());
 		Builder request = target("helloworld/links").request("application/json");
 		final Map<String,Object> unpacked = request.get(Map.class);
@@ -83,7 +77,7 @@ public class SimpleTest extends JerseyTest {
 	@Test
 	public void smokeTest() {
 		HelloWorldResource.setValue(new Value());
-		Builder request = target("helloworld/links").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
+		Builder request = target("helloworld/links").request(SimpleHALInterceptorFilter.HAL);
 		final Map<String,Object> unpacked = request.get(Map.class);
 		assertNotNull(unpacked.get("_links"));
 		Object object = unpacked.get("_embedded");
@@ -93,13 +87,13 @@ public class SimpleTest extends JerseyTest {
 	@Test
 	public void pathTest() throws IOException {
 		HelloWorldResource.setValue(new Value());
-		Builder request = target("helloworld/links").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
+		Builder request = target("helloworld/links").request(SimpleHALInterceptorFilter.HAL);
 		final Map<String,Object> unpacked = request.get(Map.class);
 		Map links = (Map) unpacked.get("_links");
 		Map<String,Object> linkSet = (Map<String, Object>) unpacked.get("_links");
 		LinksHAL linksHal = LinksHAL.unpack(linkSet);
 		String url = linksHal.get("self2").get("href");
-		System.out.println(url);
+//		System.out.println(url);
 		assertTrue(url.equals("/helloworld/links"));
 		assertFalse(url.contains("localhost"));
 	}
@@ -107,7 +101,7 @@ public class SimpleTest extends JerseyTest {
 	@Test
 	public void linksTest() throws IOException {
 		HelloWorldResource.setValue(new Value());
-		Builder request = target("helloworld/links").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
+		Builder request = target("helloworld/links").request(SimpleHALInterceptorFilter.HAL);
 		final Map<String,Object> unpacked = request.get(Map.class);
 		Map links = (Map) unpacked.get("_links");
 		Map<String,Object> linkSet = (Map<String, Object>) unpacked.get("_links");
@@ -119,9 +113,9 @@ public class SimpleTest extends JerseyTest {
 	@Test
 	public void embeddedTest() throws IOException {
 		HelloWorldResource.setValue(new Value());
-		Builder request = target("helloworld/embedded").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
+		Builder request = target("helloworld/embedded").request(SimpleHALInterceptorFilter.HAL);
 		final Map unpacked = request.get(Map.class);
-		//		printJson(unpacked);
+//				printJson(unpacked);
 		Map<String,Object> embedded = (Map) unpacked.get("_embedded");
 		EmbeddedHAL embeddedHAL = EmbeddedHAL.unpack(embedded);
 		for(List<Map<String, Map<String, Map<String, String>>>> outer: embeddedHAL.values()) {
@@ -142,7 +136,7 @@ public class SimpleTest extends JerseyTest {
 		Value local = new Value();
 		HelloWorldResource.setValue(local);
 		local.setDoFirst(false);
-		Builder request = target("helloworld/check").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
+		Builder request = target("helloworld/check").request(SimpleHALInterceptorFilter.HAL);
 		final Map<String,Object> unpacked = request.get(Map.class);
 		Map<String,Object> linkSet = (Map<String, Object>) unpacked.get("_links");
 		LinksHAL linksHal = LinksHAL.unpack(linkSet);
@@ -157,8 +151,9 @@ public class SimpleTest extends JerseyTest {
 		local.setDoArray(false);
 		local.setDoList(false);
 		local.setDoMap(true);
-		Builder request = target("helloworld/check").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
+		Builder request = target("helloworld/check").request(SimpleHALInterceptorFilter.HAL);
 		final Map<String,Object> unpacked = request.get(Map.class);
+//		printJson(unpacked);
 		Map<String,Object> embedded = (Map<String, Object>) unpacked.get("_embedded");
 		EmbeddedHAL embeddedHAL = EmbeddedHAL.unpack(embedded);
 		assertTrue(embeddedHAL.get("Mappacious").size() > 0);

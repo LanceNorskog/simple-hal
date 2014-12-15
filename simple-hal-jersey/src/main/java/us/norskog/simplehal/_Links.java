@@ -17,10 +17,15 @@ import java.lang.annotation.Target;
  *
  */
 
-@Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface _Links {
+	/**
+	 * Array of specifications for a top-level link
+	 */
 	Link[] links() default {};
-	String doc() default "";
-	Class<? extends Object>[] linkset() default Object.class;
+	/**
+	 * Array of external Hyper classes that create sets of top-level links
+	 */
+	Class<? extends Supplier>[] linkset() default {};
 }
