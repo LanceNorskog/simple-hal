@@ -34,17 +34,19 @@ public class ParsedLinkSet {
 		this.annos = annos;
 		_Links _linksAnno = (_Links) getAnno(annos, _Links.class);
 		_Embedded _embeddedAnno = (_Embedded) getAnno(annos, _Embedded.class);
-		if (Supplier.class.isAssignableFrom(_linksAnno.linkset())) {
+		if (_linksAnno.linkset().length > 0) {
+			// TODO: merge both lists
 			_linksAnno = getHyperAnnos(_Links.class, _linksAnno.linkset());
 		}
 		if (_linksAnno != null) {
 			Link[] linkSpecs = _linksAnno.links();
 			links = storeLinks(linkSpecs);
 		}
+		if (_embeddedAnno != null && _embeddedAnno.linkset().length > 0) {
+			// TODO: merge both lists
+			_embeddedAnno = getHyperAnnos(_Embedded.class, _embeddedAnno.linkset());
+		}
 		if (_embeddedAnno != null) {
-			if (Supplier.class.isAssignableFrom(_embeddedAnno.linkset())) {
-				_embeddedAnno = getHyperAnnos(_Embedded.class, _embeddedAnno.linkset());
-			}
 			Items[] items = _embeddedAnno.links();
 			if (items.length > 0) {
 				embeddedItems = new ArrayList<ItemStore>();
@@ -58,12 +60,10 @@ public class ParsedLinkSet {
 	}
 
 	// TODO: change to links/embedded
-	private <T> T getHyperAnnos(Class<T> _annoClass, Class linkset) {
-		if (! Supplier.class.isAssignableFrom(linkset)) {
-			return null;
-		}
+	private <T> T getHyperAnnos(Class<T> _annoClass, Class<? extends Supplier>[] linkset) {
 		try {
-			Method m = linkset.getMethod("getLink", Object.class);
+			Class<? extends Supplier> link0 = linkset[0];
+			Method m = link0.getMethod("getLink", Object.class);
 			return (T) m.getAnnotation((Class) _annoClass);
 		} catch (NoSuchMethodException e) {
 			// Cannot happen
@@ -120,6 +120,7 @@ public class ParsedLinkSet {
 
 	@Override
 	public int hashCode() {
+		System.out.println("ParsedLinkSet.equals()");
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Arrays.hashCode(annos);
@@ -131,6 +132,7 @@ public class ParsedLinkSet {
 
 	@Override
 	public boolean equals(Object obj) {
+		System.out.println("ParsedLinkSet.equals()");
 		if (this == obj)
 			return true;
 		if (obj == null)

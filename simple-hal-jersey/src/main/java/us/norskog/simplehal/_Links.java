@@ -27,5 +27,5 @@ public @interface _Links {
 	/**
 	 * Array of external Hyper classes that create sets of top-level links
 	 */
-	Class<? extends Supplier> linkset() default Supplier.class;
+	Class<? extends Supplier>[] linkset() default {};
 }

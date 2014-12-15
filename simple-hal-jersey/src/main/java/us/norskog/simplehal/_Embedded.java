@@ -31,7 +31,7 @@ public @interface _Embedded {
 	 * External Hyper class that creates a set of links per item
 	 * Should be array.
 	 */
-	Class<? extends Object> linkset() default Supplier.class;
+	Class<? extends Supplier>[] linkset() default {};
 	/**
 	 * EL expression which selects a collection of items from the returned values.
 	 * Overrides <i>items</i> inside Hyper class.

@@ -140,8 +140,11 @@ class LinkSupplier extends Supplier {
 
 class EmbeddedSupplier extends Supplier {
 
-	@_Embedded(links = @Items(name = "", items = "", links = {}))
-	@Override
+	@_Embedded(links = {
+			@Items(name = "Firstacious", items = "", 
+					links = { @Link(rel = "first", check = "${response.doFirst}",
+					href = "${path}/embedded?id=${item.value}", title = "id ${item.key}") })})
+	
 	public Map<String, ? extends Object> getLink(Object base) {
 		return null;
 	}
