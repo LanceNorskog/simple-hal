@@ -42,6 +42,7 @@ package us.norskog.simplehal;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import us.norskog.simplehal._Embedded;
@@ -79,7 +80,7 @@ public class SimpleHALResource {
 		@Link(rel = "self", title = "Self", href = "/simplehal/embedded"),
 		@Link(rel = "first", title = "First", 
 			href = "/simplehal/embedded?id=${response.first}") })
-	@_Embedded({ @Items(name = "Mappacious", items = "${response.map}", 
+	@_Embedded(links = { @Items(name = "Mappacious", items = "${response.map}", 
 		links = { @Link(rel = "only", title = "#${item.key}", 
 		href = "/simplehal/embedded?id=${item.value}") }) })
 	@Produces({ "application/hal+json", MediaType.APPLICATION_JSON })
@@ -93,17 +94,18 @@ public class SimpleHALResource {
 	@Path("check")
 	@_Links(links = {
 		@Link(rel = "self", title = "Self", href = "/simplehal/embedded"),
-		@Link(rel = "first", title = "First", 
+		@Link(rel = "first", title = "First", check = "${response.doFirst}",
 			href = "/simplehal/embedded?id=${response.first}") })
-	@_Embedded({ @Items(name = "Mappacious", items = "${response.map}", links = {
+	@_Embedded(links = { @Items(name = "Mappacious", items = "${response.map}", links = {
 		@Link(rel = "only", title = "id ${item.key}", check = "${item.key == 0}", 
 			href = "/simplehal/embedded?id=${item.value}"),
 		@Link(rel = "first", title = "First", check = "${response.doFirst}", 
 			href = "/simplehal/embedded?id=${response.first}") }) })
 	@Produces({ "application/hal+json", MediaType.APPLICATION_JSON })
-	public Value getValueChecks() {
+	public Value getValueChecks(@QueryParam("doFirst") boolean doFirst) {
 		if (value == null)
 			value = new Value();
+		value.setDoFirst(doFirst);
 		return value;
 	}
 

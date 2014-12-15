@@ -76,8 +76,6 @@ public class SimpleHALInterceptorFilter implements WriterInterceptor, ContainerR
 	//   @Override
 	public void aroundWriteTo(WriterInterceptorContext context)
 			throws IOException, WebApplicationException {
-		System.out.println("Generic Type: " + context.getGenericType());
-		System.out.println("Type: " + context.getType());
 		
 		try {
 			Object entity = context.getEntity();

@@ -90,8 +90,8 @@ public class Simple2Test extends JerseyTest {
 				return fac.create(baseUri, deploymentContext);
 			try {
 				URI uri = new URI(baseUri.toString() + base);
-				System.out.println("base uri: " + baseUri.toString());
-				System.out.println("full uri: " + uri.toString());
+//				System.out.println("base uri: " + baseUri.toString());
+//				System.out.println("full uri: " + uri.toString());
 				return fac.create(uri, deploymentContext);
 			} catch (URISyntaxException e) {
 				// TODO Auto-generated catch block
