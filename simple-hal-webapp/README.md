@@ -29,10 +29,10 @@ View the output in your favorite Json viewer. (I recommend the 'json_pp' and 'jq
   "doList": true
 }
 ```
-=== Links
+### Links
 Change the above curl to accept mime-type `application/hal+json`:
 ```
-curl -s -H "Accept: application/json" http://localhost:8080/simplehal/links 
+curl -s -H "Accept: application/hal+json" http://localhost:8080/simplehal/links 
 ```
 SimpleHAL adds this `_links` element to the returned JSON:
 ```
@@ -48,6 +48,8 @@ SimpleHAL adds this `_links` element to the returned JSON:
 }
 ```
 `_links` provides a handy set of URIs for data items given returned in the JSON block. `"self"` is the link you just called. `"first"` is a link to another resource provided by this webapp. (TODO: These links don't actually work.)
+### Embedded lists
+SimpleHAL can also return arrays of links, based on the data in the returned JSON block.
 ```
 curl -q -H "Accept: application/hal+json" http://localhost:8080/simplehal/embedded 
 ```
