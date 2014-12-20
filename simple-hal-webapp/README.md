@@ -77,7 +77,10 @@ SimpleHAL adds the above `_links` block and also this `_embedded` element to the
 }
 ```
 `_embedded` links are lists of items, while `_links` are top-level items. _One_-to-_many_ DB data can be returned with an entry in `_links` for the _one_ element, and an array in `_embedded` for the matchine _many_ elements. 
+#### Sources
+The Jersey endpoint supplying these response is:
 
+simplehal-webapp/src/java/us/norskog/simplehal/SimpleHalResource.java
 #### Credits
 `simplehal-webapp` is based on the Jersey hello-world webapp example:
 
