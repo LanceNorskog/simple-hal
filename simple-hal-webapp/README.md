@@ -39,51 +39,42 @@ curl -s -H "Accept: application/json" http://localhost:8080/simplehal/links
 ```
 SimpleHAL adds this `_links` element to the returned JSON:
 ```
-"_links": {
-    "first": {
-      "title": "First",
-      "href": "/simplehal/embedded?id=one"
-    },
-    "self": {
-      "title": "Self",
-      "href": "/simplehal/embedded"
-    }
-  }
-  ```
+"_links": { 
+  "first": { 
+    "title": "First",
+    "href": "/simplehal/links?id=one"
+  },
+  "self": { 
+    "title": "Self",
+    "href": "/simplehal/links"
+  } 
+}
+```
+`_links` provides a handy set of URIs for data items given returned in the JSON block. `"self"` is the link you just called. `"first"` is a link to another resource provided by this webapp. (These links don't actually work.)
 ```
 curl -q -H "Accept: application/hal+json" http://localhost:8080/simplehal/embedded 
 ```
-SimpleHAL will adds these elements to the returned JSON block:
+SimpleHAL adds the above `_links` block and also this `_embedded` element to the returned JSON block:
 ```
-"_links": {
-    "first": {
-      "title": "First",
-      "href": "/simplehal/embedded?id=one"
-    },
-    "self": {
-      "title": "Self",
-      "href": "/simplehal/embedded"
-    }
-  },
-  "_embedded": {
-    "Mappacious": [
-      {
-        "_links": {
-          "only": {
-            "title": "#100",
-            "href": "/simplehal/embedded?id=100"
-          }
-        }
-      },
-      {
-        "_links": {
-          "only": {
-            "title": "#101",
-            "href": "/simplehal/embedded?id=101"
-          }
+ "_embedded": {
+  "Mappacious": [
+    {
+      "_links": {
+        "only": {
+        "title": "#100",
+        "href": "/simplehal/embedded?id=100"
         }
       }
-    ]
-  }
+    },
+    {
+      "_links": {
+        "only": {
+          "title": "#101",
+          "href": "/simplehal/embedded?id=101"
+        }
+      }
+    }
+  ]
+}
 ```
 
