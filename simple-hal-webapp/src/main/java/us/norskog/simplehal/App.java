@@ -51,8 +51,6 @@ import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.grizzly.http.server.HttpServer;
 
-import us.norskog.simplehal._Links;
-
 /**
  * @author Pavel Bucek (pavel.bucek at oracle.com)
  */
@@ -73,10 +71,9 @@ public class App {
 			final HttpServer server = GrizzlyWebContainerFactory.create(
 					BASE_URI, ServletContainer.class, initParams);
 
-			System.out
-					.println(String
-							.format("Application started.%nTry out %s%s%nHit enter to stop it...",
-									BASE_URI, ROOT_PATH));
+			System.out.println(String.format(
+					"Application started.%nTry out %s%s%nHit enter to stop it...", 
+					BASE_URI, ROOT_PATH));
 			System.in.read();
 			server.shutdownNow();
 		} catch (IOException ex) {
