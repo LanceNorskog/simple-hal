@@ -11,9 +11,9 @@ There are several examples of HAL public APIs available, including a nice one by
 
 > [http://developer.rottentomatoes.com/docs](http://developer.rottentomatoes.com/doc)
 
-Various implementations do not follow any common standard. The RottenTomatoes API has its own format, as did the Netflix API (resquiat in pace).
+Various implementations do not follow any common standard. The RottenTomatoes API has its own format, as did the Netflix API (_resquiat in pace_).
 There are a few proposals and implementations for a common standard. 
-The IETF HAL proposal is the only one I found that includes support for collections of items, not just top-level links.
+The IETF HAL proposal is the only one I found that includes support for collections of items, not just top-level links. `_links` are top-level links and `_embedded` are collections.
 Also, the Spring Hyperlinks project uses the HAL format.
 
 
