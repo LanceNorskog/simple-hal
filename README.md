@@ -62,7 +62,7 @@ Specification format:
 rel:/path or rel:title:/path
 where title does not start with a /. It could use the %xxx code for /.
 What is in front of /path?
-
+```
 @Links(
 	@LinkSet(
     @Link(rel="self",href="/orders",title="Orders", {more attribute pairs as simple string array}),...)
@@ -75,13 +75,14 @@ What is in front of /path?
         )
     )
 )
-
+```
 Sample specs for Solr search engine:
+```
 {rel = "first",href= "/search/q=${request.q}&start=0"&${response.rows}
 {rel="prev",href= "/search/q=${request.q}&start="${response.start- response.rows"}
 {rel="next",href= "/search/q=${request.q}&start="${response.start+ response.rows"}
 {rel="last", href="/search/q=${request.q}&start="10000000000"&rows=${response.rows}}
-
+```
 Note: start and rows can be the defaults and not included in the params,
 so must be included in the return object so that the evals can find them.
 
@@ -100,15 +101,10 @@ Link annotation includes 'check' expression to decide whether to emit the link. 
 Simple-HAL is a basic implementation of the HAL hyperlink standard for Java by M. Kelly. 
 There is no reason to force this, but it's the only spec that include "_embedded" which make it actually useful. 
 The current spec:
+
 https://tools.ietf.org/html/draft-kelly-json-hal-06
+
 The examples in this draft allow the HAL blocks to contain information that is not in the outer blocks. 
-A basic premise of Simple-HAL is that the HAL blocks are add-ons to the base Json object. 
+A basic premise of SimpleHAL is that the HAL blocks are add-ons to the base Json object. 
 They only contain generated links, no original data.
------------
-Experiment with annotating RentTheRunway Alchemy API:
-need request as well as response objects?
-Collapse attributes- change @LinkSet to just array of links
-Embedded- try embedded2, embedded3 etc.
-No need for check? The first-next links will want it
-DTO objects are nonsense because they don't have _links or _embedded! if client tries to use them it'll blow up.
-Or, DTO objects need _links & _embedded on parent DTO.
+
