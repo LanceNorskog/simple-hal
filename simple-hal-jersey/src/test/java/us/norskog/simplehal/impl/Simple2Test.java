@@ -52,7 +52,7 @@ public class Simple2Test extends JerseyTest {
 	@Test
 	public void hyperTest() {
 		HelloWorldResource.setValue(new Value());
-		Builder request = target("helloworld/hyper").queryParam("simple-hal-json", "true").request(SimpleHALInterceptorFilter.HAL);
+		Builder request = target("helloworld/hyper").request(SimpleHALInterceptorFilter.HAL);
 		final Map<String,Object> unpacked = request.get(Map.class);
 		assertNotNull(unpacked.get("_links"));
 		assertNotNull(unpacked.get("_embedded"));

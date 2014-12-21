@@ -1,8 +1,7 @@
 ## HATEOS, HAL and Hyperlinks
 
-Simple-HAL is an implementation of the [HATEOAS](http://en.wikipedia.org/wiki/HATEOAS) concept. 
-The core idea of HATEOAS is very simple: a ReST service knows how it works, 
-so why should a client program also need to know? Why can't the service tell the client how to use it?
+SimpleHAL is an implementation of the [HATEOAS](http://en.wikipedia.org/wiki/HATEOAS) concept. 
+The core idea of HATEOAS is very simple: a ReST service knows how it works, so it should tell the client how to use it. The client should embed as little knowledge as possible about the service's API.
 The HAL Draft IRC is a concrete specification of the HATEOS concept. 
 
 > [https://tools.ietf.org/html/draft-kelly-json-hal-06](https://tools.ietf.org/html/draft-kelly-json-hal-06)
@@ -15,6 +14,11 @@ Various implementations do not follow any common standard. The RottenTomatoes AP
 There are a few proposals and implementations for a common standard. 
 The IETF HAL proposal is the only one I found that includes support for collections of items, not just top-level links. `_links` are top-level links and `_embedded` are collections.
 Also, the Spring Hyperlinks project uses the HAL format.
+### HALBuilder Project
+This is a set of libraries for creating data in the HAL format for several Java-based languages:
+```
+https://github.com/HalBuilder
+
 
 
 

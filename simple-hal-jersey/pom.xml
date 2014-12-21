@@ -35,7 +35,7 @@
 	<packaging>jar</packaging>
 	<name>simplehal-jersey</name>
 
-	<description>Jersey Provider using base Simple-HAL library.</description>
+	<description>Jersey Provider using base SimpleHAL library.</description>
 
 	<dependencies>
 

@@ -1,11 +1,19 @@
-This is a demo app for SimpleHAL. To try it out:
-* 'mvn clean install' in simplehal-jersey
-* 'mvn clean package exec:java' in simplehal-webapp
-* in another window, run:
+HAPPY
+
+
+This is a demo app for SimpleHAL. To try it out, run this in simple-hal/simple-hal-jersey:
+```
+mvn clean install
+```
+And then run this in simple-hal-webapp
+```
+mvn clean package exec:java
+```
+In another window, run:
 ```
 curl -s -H "Accept: application/json" http://localhost:8080/simplehal/links 
 ```
-View the output in your favorite Json viewer. (I recommend the 'json_pp' and 'jq' programs.)
+View the output in your favorite JSON viewer. (I recommend the 'json_pp' and 'jq' programs.)
 
 ```
 {
