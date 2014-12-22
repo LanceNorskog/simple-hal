@@ -1,4 +1,3 @@
-REMOVE
 
 #SimpleHAL
 SimpleHAL is a Jersey interceptor which adds optional **hyperlinks** to any JSON returned by a Jersey service endpoint. SimpleHAL is unique because it allows specifying hyperlinks with Java annotations, rather than requiring new Java classes.
