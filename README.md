@@ -1,110 +1,80 @@
-simple-hal
+SimpleHAL
 ==========
 
-# Base library & annotation wrapper for Simple-HAL project.
+SimpleHAL lets you add hyperlinks to a Jersey app with Java annotations, no coding required.
 
-Simple-HAL is an implementation of the [HATEOAS](http://en.wikipedia.org/wiki/HATEOAS) concept. The core idea of HATEOAS is very simple: a ReST service knows how it works, so why should a client program also need to know? Why can't the service tell the client how to use it?
+SimpleHAL adds two elements to returned JSON blocks:
 
-Simple-HAL allows an HTTP ReST service to export basic uses of the service by adding information
-to the response for a given request.
-For example, a search page UI sends a keyword to a search engine, 
-which returns a list of top 5 results for that keyword. With Simple-HAL, 
-the engine can also export a link named 'next' to the UI. 
-The UI then uses this link for a 'Next 5 results' button.
-This make the UI code simpler because it does not embed code that creates the 'Next' link.
+`_links`: a list of top-level links for the request and common navigation options for the request, and
 
-Simple-HAL adds two blocks of JSON to a returned json,
-_links: a list of top-level links for the request and common navigation options for the request, and
-_embedded: an (optional) list of links for a table of items returned by the request. It is easiest to explain this by example. Suppose a search page does a GET to this url:
-```
-http://zoo.phi.le/search?q=monkeys
-```
-The search engine will respond with this block of Json:
+`_embedded`: an (optional) list of links for a collection of items returned by the request. 
+
+SimpleHAL is a toolkit for the Java Jersey API. This project has two directories: 
+* simple-hal-jersey is the code for a Jersey "interceptor".
+* simple-hal-webapp is a demo Jersey app.
+See the READMEs in both directories for more.
+
+## Try it out!
+`simplehal-webapp/` is a simple Jersey demo of SimpleHAL features: 
 
 ```
-{
-"q":"monkeys",
-"start":0,
-"rows":5,
-[{"id":"547", "name":"What You Wanted", "url":"http://blah/foo/WhatYouWanted.pdf"},
- {"id":"462", "name":"Kind Of Relevant", "url":"http://blah/foo/KindOfRelevant.pdf"},
-...
- {"id":"7888", "name":"Snow Monkeys in a Hot Tub", "url":"http://blah/foo/SnowMoneys.png"}
-]
-}
+cd simplehal-jersey
+mvn clean install
+cd ../simplehal-webapp
+mvn clean package exec:java
 ```
-This response tells the UI what it needs to know to make a Next button, but the UI developer has to add code for the Next button. Simple-HAL can add an extra block of Json to the result:
-```
-"_links": {
-[{ "name":"self", "href": "http://zoo.phi.le/search?q=monkeys" },
- { "name":"next", "title":"Next", "href": "http://zoo.phi.le/search?q=monkeys&start=5&rows=5" },
-]}
-```
-Now, the UI can just hunt for the element with _name_="next' and put _title_ and _href_ in the UI.
 
-Simple-HAL can also add ready-made display information for all of the search results.
-```
-"_embedded": {
-     "Constance" : [
-         [
-            {
-               "rel" : "only",
-               "title" : "id 0",
-               "href" : "http://localhost:9998/helloworld/embedded?id=hello"
-            }
-         ]
-      ],
+See simplehal-webapp/README.md for more.
+
+## Why?
+SimpleHAL is an implementation of the [HATEOAS](http://en.wikipedia.org/wiki/HATEOAS) concept. 
+HATEOS is a clear win for the API world because it simplifies clients, 
+and there are (usually) many more clients than services.
+Adoption of HATEOS has lagged for a few reasons:
+* Lack of a standard
+* Lack of demand
+* Effort of implementation
+
+SimpleHAL remedies this last problem by making it as easy as possible to add hyperlinks to a Jersey-based ReST service. 
+You don't have to write any Java code to add hyperlinks: 
+SimpleHAL specifies hyperlinks via strings in Java annotations.
+If you have a Jersey endpoint to returns information about a movie, 
+this annotation will add links for the movie itself and and the director:
 
 ```
-Simple-HAL specifies these links with text specifiers only. There is no ability to supply code to implement the additions.
-
-Specification format:
-rel:/path or rel:title:/path
-where title does not start with a /. It could use the %xxx code for /.
-What is in front of /path?
+@_Links(links = {
+			@Link(rel = "movie", href = "/movie/${response.movieId}", title = "Movie"),
+			@Link(rel = "director", href = "/directors/${response.directorId}", title = "Director") })
 ```
-@Links(
-	@LinkSet(
-    @Link(rel="self",href="/orders",title="Orders", {more attribute pairs as simple string array}),...)
-@Embedded(item="${a.b}", links={
-    @Link(rel="self",href="/path/order/${order}", ... }
-    )
-    @Embedded(
-        path = "a.b means a.getB()",
-        @LinkSet(... as above but with "item." available)
-        )
-    )
-)
-```
-Sample specs for Solr search engine:
-```
-{rel = "first",href= "/search/q=${request.q}&start=0"&${response.rows}
-{rel="prev",href= "/search/q=${request.q}&start="${response.start- response.rows"}
-{rel="next",href= "/search/q=${request.q}&start="${response.start+ response.rows"}
-{rel="last", href="/search/q=${request.q}&start="10000000000"&rows=${response.rows}}
-```
-Note: start and rows can be the defaults and not included in the params,
-so must be included in the return object so that the evals can find them.
 
-embedded: use ${response.results} {
-[{title="${... item.title ...}", href="${... item.url ...}"]
-}
+A client for this API only needs to know how to fetch a movie.
+It does not need to know how to fetch the director, 
+because the API has exported this knowledge in the `director` link.
+If the client is a UI, it can even use the `title` field to populate the link fields.
 
-EL spec:
-three variables: request, response and item. item is the row item found by the embedded search path.
-item can be an object, Map or an array of items. it cannot be a base type.
-ELs are run under a SecurityManager object.
+There are other toolkits for this purpose, but they require writing Java code.
+SimpleHAL only requires Java annotations, strings and code in the Java EL expression language.
+(Ok, "no coding required" was merely [truthy](http://www.urbandictionary.com/define.php?term=Truthyness+).)
 
-Link annotation includes 'check' expression to decide whether to emit the link. Defaults to true.
+## More Info
 
------
-Simple-HAL is a basic implementation of the HAL hyperlink standard for Java by M. Kelly. 
-There is no reason to force this, but it's the only spec that include "_embedded" which make it actually useful. 
-The current spec:
+For more details on how SimpleHAL works, see SimpleHAL.md in this directory.
+For more on HATEOS and the context of this toolkit, see Hyperlinks.md in this directory. 
+The source code and full details of the API are in simplehal-jersey.
+simplehal-webapp is a simple demo of SimpleHAL's features and show you how to integrate it in your Jersey apps.
 
-https://tools.ietf.org/html/draft-kelly-json-hal-06
+## Contributing
 
-The examples in this draft allow the HAL blocks to contain information that is not in the outer blocks. 
-A basic premise of SimpleHAL is that the HAL blocks are add-ons to the base Json object. 
-They only contain generated links, no original data.
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
 
+# Important Informations!
+SimpleHAL is "mostly finished". Some features were designed not implemented.
+At this point it is an experiment. If you think it's worth finishing, 
+please contact me with encouragement and feedback.
+
+
+Lance

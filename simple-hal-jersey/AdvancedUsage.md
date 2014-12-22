@@ -1,11 +1,14 @@
 ### Advanced Usage
-##### Check Expression
+#### Check Expression
 
 Every link specification may include a *check* expression which decides whether or not to include the link. 
 The *check* expression should be a boolean EL expression with nothing outside the braces.
 
-This example shows how to use SimpleHAL to paginate through search engine results. This is the JSON returned by a search query:
+This example shows how to use SimpleHAL to paginate through search engine results.
+This is a search engine query and the JSON returned:
 ```
+http://api.movielicio.us/search?q=monkeys
+
 {
   q:"monkeys",
   offset:0,
@@ -13,7 +16,10 @@ This example shows how to use SimpleHAL to paginate through search engine result
   total:34
 }
 ```
-*offset* is the position of the first result in the set. *rows" is the number of results to return. *total* is the total number of search results available. This set of links can incrementally page through the result set by supplying :
+**offset** is the position of the first result in the set. 
+**rows** is the number of results to return. 
+**total** is the total number of search results available. 
+This set of links can incrementally page through the result set by supplying :
 ```
 @_Links(links = {
   @Link(rel = "current", href = {"/movie?q=${response.q}&offset=${response.offset}&rows=${response.rows}", title = "Current"},
@@ -25,15 +31,23 @@ This example shows how to use SimpleHAL to paginate through search engine result
   @Link(rel = "last", href = {"/movie?q=${response.q}&offset=${response.total - response.rows}&rows=${response.rows}", title = "Last"}
 })
 ```
-Each link can be used verbatim for the First, Next and Previous buttons in a search UI. Next and Previous use check expressions to decide whether or not that link makes sense. If we're at the end of the list, there's no Next link. If we're at the beginning of the list, there's no Previous link. 
+Each link can be used verbatim for the _First_, _Next_ and _Previous_ buttons in a search UI. 
+_Next_ and _Previous_ use **check** expressions to decide whether or not that link makes sense. 
+If we're at the end of the list, do not return a Next link. 
+If we're at the beginning of the list, do not return the _Previous_ link. 
 
-##### **Supplier** example
-The **Supplier** interface adds two features to SimpleHAL:
+#### **Supplier** example
+The **Supplier** class adds two features to SimpleHAL:
 
 * It can create links instead of using the annotations.
 * It supplies a template feature so that an annotation need only be declared once.
 
-Java's Annotation feature does not supply templates by default. **Supplier** gives a slightly hacky workaround for this lack by the simple expedient of allowing you to declare **@_Links** and **@_Embedded** on a method in the **Supplier** class rather than on Jersey endpoints. We will use the above annotations as an example:
+Java's Annotation feature does not supply templates by default. 
+**Supplier** gives a slightly hacky workaround for this lack 
+by the simple expedient of allowing you to declare 
+**@_Links** and **@_Embedded** on a method in the **Supplier** class
+rather than on Jersey endpoints. 
+We will use the above annotations as an example:
 ```
 public class MovieSupplier extends Supplier {
   @_Links(links = @Link(rel = "movie", href = "/movie/${response.movieId}", title = "Movie")))
@@ -63,11 +77,15 @@ We can remove the **@_Links** annotation from *movieGet()* and instead add this 
 ```
 @_Links(linkset = MovieSupplier.class)
 ```
-This uses the above Supplier class as a vessel for the original **@_Links** annotation. Real-life use of **@_Links** will be a few lines of text and use of **@_Embedded** can be several lines of text.
+This uses the above Supplier class as a vessel for the original **@_Links** annotation. 
+Real-life use of **@_Links** will be a few lines of text 
+and use of **@_Embedded** can be several lines of text.
+This feature can save a lot of code noise and maintenance problems
 
-There can be several Supplier classes instead of just one. For example, if MovieJson includes a 'year' field and there is a search endpoint */year/{number}* one might also create a YearSupplier class for the year search **_@Links** annotation. The **@_Links** annotation for all three endpoints would then be:
+There can be several Supplier classes instead of just one. For example, if MovieJson includes a 'year' field and there is a search endpoint **/year/{number}** one might also create a YearSupplier class for the year search **_@Links** annotation. The **@_Links** annotation for all three endpoints would then be:
 ```
 @_Links(linkset = {MovieSupplier.class, YearSupplier.class})
 ```
+**links** and **linkset** fields cannot be used simultaneously. 
 
 

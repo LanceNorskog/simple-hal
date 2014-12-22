@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Jersey Filter/Interceptor for Simple-HAL links unpacker
+ * Jersey Filter/Interceptor for SimplHAL links unpacker
  * For all requests for hal+json, add hyperlinks defined
  * by @Links annotation on endpoint.
  * Hyperlinks are defined with text titles, urls etc. which
