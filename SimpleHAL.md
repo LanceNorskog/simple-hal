@@ -58,7 +58,8 @@ With SimpleHAL, the Jersey HTTP endpoint for the above response looks like this:
 			title = "id ${item.value.name}") })})
 public MovieJson getMovie(@PathParam("movieId") String movieId) {...}
 
-class MovieJson { String movieId, year, directors[]; ** getters for these fields **}
+class MovieJson { String movieId, year; List<Director> directors; ** getters for these fields **}
+class Director {String directorId, name; ** getters for these fields ** }
 ```
 
 #### Variables in EL expressions

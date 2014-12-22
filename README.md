@@ -48,16 +48,20 @@ this annotation will add links for the movie itself and and the director:
 ```
 
 A client for this API only needs to know how to fetch a movie.
-It does not need to know how to fetch the director, because the API has exported this knowledge.
+It does not need to know how to fetch the director, 
+because the API has exported this knowledge in the `director` link.
 If the client is a UI, it can even use the `title` field to populate the link fields.
 
 There are other toolkits for this purpose, but they require writing Java code.
 SimpleHAL only requires Java annotations, strings and code in the Java EL expression language.
+(Ok, "no coding required" was merely [truthy](http://www.urbandictionary.com/define.php?term=Truthyness+).)
 
 ## More Info
 
-For more on how to use SimpleHAL and why it will make your life wonderful, see SimpleHAL.md in this directory.
+For more details on how SimpleHAL works, see SimpleHAL.md in this directory.
 For more on HATEOS and the context of this toolkit, see Hyperlinks.md in this directory. 
+The source code and full details of the API are in simplehal-jersey.
+simplehal-webapp is a simple demo of SimpleHAL's features and show you how to integrate it in your Jersey apps.
 
 ## Contributing
 
@@ -67,3 +71,10 @@ For more on HATEOS and the context of this toolkit, see Hyperlinks.md in this di
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
 
+# Important Informations!
+SimpleHAL is "mostly finished". Some features were designed not implemented.
+At this point it is an experiment. If you think it's worth finishing, 
+please contact me with encouragement and feedback.
+
+
+Lance
