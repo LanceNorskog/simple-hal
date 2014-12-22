@@ -12,13 +12,22 @@ There are several examples of HAL public APIs available, including a nice one by
 
 Various implementations do not follow any common standard. The RottenTomatoes API has its own format, as did the Netflix API (_resquiat in pace_).
 There are a few proposals and implementations for a common standard. 
-The IETF HAL proposal is the only one I found that includes support for collections of items, not just top-level links. `_links` are top-level links and `_embedded` are collections.
-Also, the Spring Hyperlinks project uses the HAL format.
-### HALBuilder Project
-This is a set of libraries for creating data in the HAL format for several Java-based languages:
-```
-https://github.com/HalBuilder
+The IETF HAL proposal is the only one I found that includes support for collections of items, not just top-level links. `_links`are top-level links and `_embedded` are collections.
+Also, the [Spring Hyperlinks](http://spring.io/guides/gs/rest-hateoas/) project uses the HAL format.
 
+### Specification
+Simple-HAL is a basic implementation of the HAL hyperlink standard.. 
+There is no reason to force this, but it's the only spec that include `_embedded` collections.
+The current spec:
+
+```
+https://tools.ietf.org/html/draft-kelly-json-hal-06
+```
+
+The examples in the IETF draft allow the HAL blocks to contain information that is not in the outer blocks. SimpleHAL does not implement this aspect. A basic premise of SimpleHAL is that the HAL blocks are add-ons to the base JSON object, and so they cannot contain information which is not present in the original response. 
+
+### Other Resources
+[HalBuilder](https://github.com/HalBuilder) is a set of libraries for creating data in the HAL format for several Java-based languages.
 
 
 
