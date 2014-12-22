@@ -29,7 +29,7 @@ See simplehal-webapp/README.md for more.
 ## Why?
 SimpleHAL is an implementation of the [HATEOAS](http://en.wikipedia.org/wiki/HATEOAS) concept. 
 HATEOS is a clear win for the API world because it simplifies clients, 
-and there are (usually) many more clients than services
+and there are (usually) many more clients than services.
 Adoption of HATEOS has lagged for a few reasons:
 * Lack of a standard
 * Lack of demand
@@ -39,7 +39,7 @@ SimpleHAL remedies this last problem by making it as easy as possible to add hyp
 You don't have to write any Java code to add hyperlinks: 
 SimpleHAL specifies hyperlinks via strings in Java annotations.
 If you have a Jersey endpoint to returns information about a movie, 
-this annotation will add links for the movie itself and and the director.
+this annotation will add links for the movie itself and and the director:
 
 ```
 @_Links(links = {
@@ -47,14 +47,14 @@ this annotation will add links for the movie itself and and the director.
 			@Link(rel = "director", href = "/directors/${response.directorId}", title = "Director") })
 ```
 
-A client for this API needs to know how to fetch a movie.
+A client for this API only needs to know how to fetch a movie.
 It does not need to know how to fetch the director, because the API has exported this knowledge.
+If the client is a UI, it can even use the `title` field to populate the link fields.
 
 There are other toolkits for this purpose, but they require writing Java code.
 SimpleHAL only requires Java annotations, strings and code in the Java EL expression language.
 
 ## More Info
-
 
 For more on how to use SimpleHAL and why it will make your life wonderful, see SimpleHAL.md in this directory.
 For more on HATEOS and the context of this toolkit, see Hyperlinks.md in this directory. 

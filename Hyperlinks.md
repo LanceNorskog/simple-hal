@@ -2,12 +2,16 @@
 
 SimpleHAL is an implementation of the [HATEOAS](http://en.wikipedia.org/wiki/HATEOAS) concept.
 HATEOS provides useful features to the client of a ReST app:
+
 * Discoverability
-** 
+  * HATEOS allow the developer to learn how an API works by example. 
+  The API documentation may not mention subtleties of the implementation, 
+  details of the API may change without notice,
+  or there may be no documentation at all.
 * Knowledge Export
-** HATEOS exports knowledge of a ReST service's API to the client. This simplifies the client because it does not need to embed knowledge of how to use the API.
+  * HATEOS exports knowledge of a ReST service's API to the client. This simplifies the client because it does not need to embed knowledge of how to use the API.
 * Resource Style
-** HATEOS nudges the API towards a resource-based style. This means that the API provides unique, permanent links to resources available from the API. For example, a movie will always be represented by only one link and that link will always refer the same movie.
+  * HATEOS nudges the API towards a resource-based style. This means that the API provides unique, permanent links to resources available from the API. For example, a movie will always be represented by only one link and that link will always refer the same movie.
  
 ### Standards
 
