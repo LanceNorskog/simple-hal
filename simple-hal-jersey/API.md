@@ -12,7 +12,7 @@ The `@Link` annotation specifies one link. It is only used inside `@_Links`.
 
 **@_Embedded**
 
-The `@_Embedded` annotations specifies set of links for items in a collections.
+The `@_Embedded` annotations specifies set of links for items in a collection.
 
 **@Items**
 
