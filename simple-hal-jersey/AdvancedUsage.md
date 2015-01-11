@@ -86,6 +86,6 @@ There can be several Supplier classes instead of just one. For example, if Movie
 ```
 @_Links(linkset = {MovieSupplier.class, YearSupplier.class})
 ```
-**links** and **linkset** fields cannot be used simultaneously. 
+
 
 
