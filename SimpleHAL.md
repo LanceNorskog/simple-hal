@@ -69,11 +69,9 @@ There are two variables available in EL expressions, `response` and `item`.
 In both **@_Links** and **@_Embedded** the `response` object has getters for movieId, year and list of directors.
 `$(response.movieId}` calls the getter method and fills in the returned string into the link.
 In **@_Embedded**, the *items* expression chooses a collection from the response. `${item.value}` is the selected record.
- `{item.key}` is the index of the record in the collection. 
+`{item.key}` is the index of the record in the collection. 
 If *items* selects a substructure or map, *${item.key}* is the name of each item.
 
-EL expressions only call Java POJO getters or Map lookups. 
-They do not look directly at fields or call any other code in an object.
-They are not vulnerable to injection attacks. (This may require using Java SecurityManager objects.)
+
 
 
